@@ -15,7 +15,7 @@ Route::get('files/{hash}/{name}', 'LA\UploadsController@get_file');
 */
 
 $as = "";
-if(\Dwij\Laraadmin\Helpers\LAHelper::laravel_ver() >= 5.3) {
+if(\Dwij\Laraadmin\Helpers\LAHelper::is_recent_laravel_version()) {
 	$as = config('laraadmin.adminRoute').'.';
 	
 	// Routes for Laravel 5.3
@@ -70,4 +70,16 @@ Route::group(['as' => $as, 'middleware' => ['auth', 'permission:ADMIN_PANEL']], 
 	Route::get(config('laraadmin.adminRoute') . '/backup_dt_ajax', 'LA\BackupsController@dtajax');
 	Route::post(config('laraadmin.adminRoute') . '/create_backup_ajax', 'LA\BackupsController@create_backup_ajax');
 	Route::get(config('laraadmin.adminRoute') . '/downloadBackup/{id}', 'LA\BackupsController@downloadBackup');
+
+    /* ================== Titles ================== */
+    Route::resource(config('laraadmin.adminRoute') . '/titles', 'LA\TitlesController');
+    Route::get(config('laraadmin.adminRoute') . '/title_dt_ajax', 'LA\TitlesController@dtajax');
+
+    /* ================== Account_Types ================== */
+    Route::resource(config('laraadmin.adminRoute') . '/account_types', 'LA\Account_TypesController');
+    Route::get(config('laraadmin.adminRoute') . '/account_type_dt_ajax', 'LA\Account_TypesController@dtajax');
+
+    /* ================== Accounts ================== */
+    Route::resource(config('laraadmin.adminRoute') . '/accounts', 'LA\AccountsController');
+    Route::get(config('laraadmin.adminRoute') . '/account_dt_ajax', 'LA\AccountsController@dtajax');
 });
