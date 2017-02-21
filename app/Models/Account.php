@@ -15,14 +15,18 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Account extends Model
 {
     use SoftDeletes;
-    
+
     protected $table = 'accounts';
-    
+
     protected $hidden = [
-    
+
     ];
-    
+
     protected $guarded = [];
-    
+
     protected $dates = ['deleted_at'];
+
+    public function users(){
+        return $this->belongsToMany('App\User'::class)->withPivot('name');
+    }
 }

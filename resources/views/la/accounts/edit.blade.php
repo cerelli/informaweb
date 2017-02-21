@@ -39,6 +39,7 @@
 					@la_input($module, 'name2')
 					@la_input($module, 'notes')
 					@la_input($module, 'account_account_type')
+					@la_input($module, 'account_user')
                     --}}
                     <br>
                     <div class="form-group">

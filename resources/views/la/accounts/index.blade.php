@@ -8,7 +8,7 @@
 
 @section("headerElems")
 @la_access("Accounts", "create")
-    <button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#AddModal">Add Account</button>
+    <button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#AddModal">{{ __('Add Account') }}</button>
 @endla_access
 @endsection
 
@@ -31,15 +31,19 @@
         <thead>
         <tr class="success">
             @foreach( $listing_cols as $col )
-            <th>{{ $module->fields[$col]['label'] or ucfirst($col) }}</th>
+                @if ($col === 'id')
+                    <th>{{ $module->fields[$col]['label'] or __(ucfirst($col)) }}</th>
+                @else
+                    <th>{{ __($module->fields[$col]['label']) }}</th>
+                @endif
             @endforeach
             @if($show_actions)
-            <th>Actions</th>
+            <th>{{ __('Actions') }}</th>
             @endif
         </tr>
         </thead>
         <tbody>
-            
+
         </tbody>
         </table>
     </div>
@@ -51,13 +55,13 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Add Account</h4>
+                <h4 class="modal-title" id="myModalLabel">{{ __('Add Account') }}</h4>
             </div>
             {!! Form::open(['action' => 'LA\AccountsController@store', 'id' => 'account-add-form']) !!}
             <div class="modal-body">
                 <div class="box-body">
                     @la_form($module)
-                    
+
                     {{--
                     @la_input($module, 'title_id')
 					@la_input($module, 'is_person')
@@ -65,11 +69,12 @@
 					@la_input($module, 'name2')
 					@la_input($module, 'notes')
 					@la_input($module, 'account_account_type')
+					@la_input($module, 'account_user')
                     --}}
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('Close') }}</button>
                 {!! Form::submit( 'Submit', ['class'=>'btn btn-success']) !!}
             </div>
             {!! Form::close() !!}
@@ -102,7 +107,7 @@ $(function () {
         @endif
     });
     $("#account-add-form").validate({
-        
+
     });
 });
 </script>

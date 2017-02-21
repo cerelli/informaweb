@@ -83,6 +83,17 @@ class CreateAccountsTable extends Migration
                 "required" => true,
                 "listing_col" => true,
                 "popup_vals" => "@account_types",
+            ], [
+                "colname" => "account_user",
+                "label" => "account_user",
+                "field_type" => "Multiselect",
+                "unique" => false,
+                "defaultvalue" => "",
+                "minlength" => 0,
+                "maxlength" => 0,
+                "required" => false,
+                "listing_col" => false,
+                "popup_vals" => "@users",
             ]
         ]);
         

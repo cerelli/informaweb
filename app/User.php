@@ -49,4 +49,9 @@ class User extends Authenticatable implements AuthorizableContract, CanResetPass
     {
         return $this->hasMany('App\Models\Upload');
     }
+
+    public function accounts()
+    {
+        return $this->belongsToMany('App\Models\Account'::class)->withPivot('acc_view','acc_create','acc_edit','acc_delete');
+    }
 }

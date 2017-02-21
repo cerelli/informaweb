@@ -82,4 +82,6 @@ Route::group(['as' => $as, 'middleware' => ['auth', 'permission:ADMIN_PANEL']], 
     /* ================== Accounts ================== */
     Route::resource(config('laraadmin.adminRoute') . '/accounts', 'LA\AccountsController');
     Route::get(config('laraadmin.adminRoute') . '/account_dt_ajax', 'LA\AccountsController@dtajax');
+
+
 });

@@ -15,5 +15,5 @@ return [
 
     'previous' => '&laquo; Precedente',
     'next' => 'Prossimo &raquo;',
-
+    'add_account' => 'Aggiungi Account',
 ];
