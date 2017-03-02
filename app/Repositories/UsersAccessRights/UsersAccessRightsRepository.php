@@ -14,7 +14,7 @@ class UsersAccessRightsRepository implements UsersAccessRightsRepositoryContract
 
     public function __construct()
     {
-        $this->obj=$this;
+        dd($usersAccess->getAccountsUsersAccessRights(1));
     }
    /**
    * @param $account_id
@@ -30,7 +30,7 @@ class UsersAccessRightsRepository implements UsersAccessRightsRepositoryContract
                    ->whereNotIn('roles.name', ['SUPER_ADMIN','NORMAL_ADMIN'])
                    ->where('account_user.account_id', $account_id);
 
-       $AccountUsersAccessRights = DB::table('users')
+       $union = DB::table('users')
                                ->leftJoin('account_user', 'account_user.user_id', '=', 'users.id')
                                ->leftJoin('role_user', 'role_user.user_id', '=', 'users.id')
                                ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
@@ -38,7 +38,6 @@ class UsersAccessRightsRepository implements UsersAccessRightsRepositoryContract
                                ->whereNotIn('roles.name', ['SUPER_ADMIN','NORMAL_ADMIN'])
                                ->union($first)
                                ->get();
-        dd($AccountUsersAccessRights);
-       return $AccountUsersAccessRights;
+       return $union;
    }
 }
