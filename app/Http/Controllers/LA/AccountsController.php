@@ -31,11 +31,11 @@ class AccountsController extends Controller
     public $show_action = true;
     protected $usersAccess;
 
-    public function __construct(
-        UsersAccessRightsRepositoryContract $usersAccess
-    )
+    public function __construct(UsersAccessRightsRepositoryContract $usersAccess)
     {
-        $this->usersAccess = $usersAccess;
+        dd($usersAccess);
+          $this->usersAccess = $usersAccess;
+
     }
     /**
      * Display a listing of the Accounts.
@@ -114,8 +114,7 @@ class AccountsController extends Controller
                     'view_col' => $module->view_col,
                     'no_header' => true,
                     'no_padding' => "no-padding"
-                ])->with('account', $account)
-                ->withUsersAccess($this->usersAccess->getAccountUsersAccessRights($account->id));
+                ])->with('account', $account);
             } else {
                 return view('errors.404', [
                     'record_id' => $id,

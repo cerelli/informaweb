@@ -10,6 +10,12 @@ use DB;
 */
 class UsersAccessRightsRepository implements UsersAccessRightsRepositoryContract
 {
+    protected $obj;
+
+    public function __construct()
+    {
+        $this->obj=$this;
+    }
    /**
    * @param $account_id
    * @return mixed
@@ -32,7 +38,7 @@ class UsersAccessRightsRepository implements UsersAccessRightsRepositoryContract
                                ->whereNotIn('roles.name', ['SUPER_ADMIN','NORMAL_ADMIN'])
                                ->union($first)
                                ->get();
-
+        dd($AccountUsersAccessRights);
        return $AccountUsersAccessRights;
    }
 }

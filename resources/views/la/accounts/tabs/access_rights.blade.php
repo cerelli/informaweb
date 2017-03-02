@@ -24,9 +24,7 @@
                     </th>
                 </tr>
             </thead>
-            @foreach($usersAccess-> as $userAccess)
-                $userAccess;
-            @endforeach
+
         </table>
         <center><input class="btn btn-success" type="submit" name="Save"></center>
     </form>
