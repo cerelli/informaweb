@@ -3,7 +3,6 @@ namespace App\Repositories\UsersAccessRights;
 
 use App\Repositories\UsersAccessRights\UsersAccessRightsRepositoryContract;
 use DB;
-use App\Models\Account;
 
 /**
 * Class UsersAccessRightsRepository
@@ -15,7 +14,7 @@ class UsersAccessRightsRepository implements UsersAccessRightsRepositoryContract
    * @param $account_id
    * @return mixed
    */
-   public function getAccountUsersAccessRights($account_id)
+   public function getAccountsUsersAccessRights($account_id)
    {
        $first = DB::table('users')
                    ->leftJoin('account_user', 'account_user.user_id', '=', 'users.id')
