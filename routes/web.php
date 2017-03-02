@@ -18,3 +18,7 @@ Route::get('/', function () {
 /* ================== Homepage + Admin Routes ================== */
 
 require __DIR__.'/admin_routes.php';
+
+Route::get('test', 'TestsController@getIndex');
+
+Route::get('data', 'TestsController@anyData')->name('test.data');

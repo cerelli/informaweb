@@ -12,6 +12,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\User;
+use DB;
+
 class Account extends Model
 {
     use SoftDeletes;
@@ -27,6 +30,33 @@ class Account extends Model
     protected $dates = ['deleted_at'];
 
     public function users(){
-        return $this->belongsToMany('App\User'::class)->withPivot('name');
+        return $this->belongsToMany(User::class)
+            ->withPivot('acc_view','acc_create','acc_edit','acc_delete');
+    }
+
+    /**
+     * Get Specific Account Access for login user or specific user ($user_id)
+     *
+     * Account::hasAccess($account_id, $access_type, $user_id);
+     *
+     * @param $account_id Account ID
+     * @param string $access_type Access Type - view / create / edit / delete
+     * @param int $user_id User id for which Access will be checked
+     * @return bool Returns true if access is there or false
+     */
+    public static function hasAccess($account_id, $access_type = "view", $user_id = 0)
+    {
+        $roles = array();
+
+        if($access_type == null || $access_type == "") {
+            $access_type = "view";
+        }
+
+        $account_perm = DB::table('account_user')->where('user_id', $user_id)->where('account_id', $account_id)->first();
+        if(isset($account_perm->{"acc_" . $access_type}) && $account_perm->{"acc_" . $access_type} == 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

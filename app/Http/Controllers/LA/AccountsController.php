@@ -20,13 +20,23 @@ use Collective\Html\FormFacade as Form;
 use Dwij\Laraadmin\Models\Module;
 use Dwij\Laraadmin\Models\ModuleFields;
 use Dwij\Laraadmin\Models\ModuleFieldTypes;
+use Zizaco\Entrust\EntrustFacade as Entrust;
+use App\Repositories\UsersAccessRights\UsersAccessRightsRepositoryContract;
+
 
 use App\Models\Account;
 
 class AccountsController extends Controller
 {
     public $show_action = true;
+    protected $usersAccess;
 
+    public function __construct(
+        UsersAccessRightsRepositoryContract $usersAccess
+    )
+    {
+        $this->usersAccess = $usersAccess;
+    }
     /**
      * Display a listing of the Accounts.
      *
@@ -104,7 +114,8 @@ class AccountsController extends Controller
                     'view_col' => $module->view_col,
                     'no_header' => true,
                     'no_padding' => "no-padding"
-                ])->with('account', $account);
+                ])->with('account', $account)
+                ->withUsersAccess($this->usersAccess->getAccountUsersAccessRights($account->id));
             } else {
                 return view('errors.404', [
                     'record_id' => $id,
@@ -201,9 +212,25 @@ class AccountsController extends Controller
     public function dtajax(Request $request)
     {
         $module = Module::get('Accounts');
+
         $listing_cols = Module::getListingColumns('Accounts');
 
-        $values = DB::table('accounts')->select($listing_cols)->whereNull('deleted_at');
+        if(Entrust::can('view_all_accounts') || Entrust::hasRole('SUPER_ADMIN')) {
+            $values = DB::table('accounts')->select($listing_cols)->whereNull('deleted_at');
+        } else {
+            $accounts_user = DB::table('account_user')
+                                ->select('account_id')
+                                ->where('user_id', Auth::user()->id)
+                                ->where('acc_view', 1);
+
+            // $values = DB::table('accounts')->select($listing_cols)->whereNull('deleted_at');
+            $values = DB::table('accounts')
+                        ->select($listing_cols)
+                        ->whereNull('deleted_at')
+                        ->whereIn('id', $accounts_user);
+        }
+
+
         $out = Datatables::of($values)->make();
         $data = $out->getData();
 
@@ -243,7 +270,9 @@ class AccountsController extends Controller
             if($this->show_action) {
                 $output = '';
                 if(Module::hasAccess("Accounts", "edit")) {
-                    $output .= '<a href="' . url(config('laraadmin.adminRoute') . '/accounts/' . $data->data[$i][0] . '/edit') . '" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>';
+                    if(Account::hasAccess($data->data[$i][0], "edit", Auth::user()->id)) {
+                        $output .= '<a href="' . url(config('laraadmin.adminRoute') . '/accounts/' . $data->data[$i][0] . '/edit') . '" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>';
+                    }
                 }
 
                 if(Module::hasAccess("Accounts", "delete")) {

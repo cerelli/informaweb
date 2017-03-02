@@ -4,7 +4,7 @@
     </div>
     <form action="{{ url(config('laraadmin.adminRoute') . '/save_role_module_permissions/'.$module->id) }}" method="post">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-        <table class="table table-bordered dataTable no-footer table-access_rights">
+        <table class="table table-bordered dataTable no-footer table-access_rights" id="tablea-access_rights">
             <thead>
                 <tr class="blockHeader">
                     <th width="14%">
@@ -24,12 +24,8 @@
                     </th>
                 </tr>
             </thead>
-            <?php $users = DB::table('role_user')->leftJoin('roles','role_user.role_id', '=', 'roles.id')->leftJoin('users','role_user.user_id','=','users.id')->where('roles.name','<>','SUPER_ADMIN')->get(); ?>
-            @foreach($users as $user)
-                <tr class="tr-access-basic" user_id="{{ $user->id }}">
-
-                </tr>
-
+            @foreach($usersAccess-> as $userAccess)
+                $userAccess;
             @endforeach
         </table>
         <center><input class="btn btn-success" type="submit" name="Save"></center>
@@ -68,4 +64,21 @@
 .ui-field{list-style: none;padding: 3px 7px;border: solid 1px #cccccc;border-radius: 3px;background: #f5f5f5;margin-bottom: 4px;}
 
 </style>
+
+@endpush
+
+@push('scripts')
+<script>
+$(function () {
+    $("#tablea-access_rights").DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: '{{ url(config('laraadmin.adminRoute') . '/account_access_right') }}',
+        columns: [
+            { data: 'name', name: 'name'}
+        ]
+    });
+
+});
+</script>
 @endpush
