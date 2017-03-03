@@ -83,7 +83,7 @@ Route::group(['as' => $as, 'middleware' => ['auth', 'permission:ADMIN_PANEL']], 
     Route::resource(config('laraadmin.adminRoute') . '/accounts', 'LA\AccountsController');
     Route::get(config('laraadmin.adminRoute') . '/account_dt_ajax', 'LA\AccountsController@dtajax');
 	Route::get(config('laraadmin.adminRoute') . '/account_access_right', 'LA\AccountsController@usersAccessRights');
-
+	Route::post(config('laraadmin.adminRoute') . '/save_account_access_rights/{id}', 'LA\AccountsController@save_account_access_rights');
 
 
 });

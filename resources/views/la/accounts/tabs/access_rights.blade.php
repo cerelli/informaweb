@@ -2,16 +2,16 @@
     <div class="guide1">
         <span class="pull-left">Module Access for Users</span>
     </div>
-    <form action="{{ url(config('laraadmin.adminRoute') . '/save_role_module_permissions/'.$module->id) }}" method="post">
+    <form action="{{ url(config('laraadmin.adminRoute') . '/save_account_access_rights/'.$account->id) }}" method="post">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <table class="table table-bordered dataTable no-footer table-access_rights" id="tablea-access_rights">
             <thead>
                 <tr class="blockHeader">
                     <th width="14%">
-                        <input class="alignTop" type="checkbox" id="role_select_all" >&nbsp; Users
+                        <input class="alignTop" type="checkbox" id="user_select_all" >&nbsp; Users
                     </th>
                     <th width="14%">
-                        <input type="checkbox" id="view_all" >&nbsp; View
+                        <input type="checkbox" id="view_select_all" >&nbsp; View
                     </th>
                     <th width="14%">
                         <input type="checkbox" id="create_all" >&nbsp; Create
@@ -24,7 +24,16 @@
                     </th>
                 </tr>
             </thead>
-
+            @foreach($userAccessRights as $userAccess)
+                {{-- {!! dd($userAccessRights) !!}; --}}
+                <tr>
+                    <td><input module_id="{{ $userAccess->id }}" class="module_checkb" type="checkbox" name="user_{{$userAccess->user_id}}" id="user_{{$userAccess->user_id}}" checked="checked">&nbsp; {{ $userAccess->name }}</td>
+                    <td><input module_id="{{ $userAccess->id }}" class="view_checkb" type="checkbox" name="acuser_{{$userAccess->user_id}}_view" id="user_{{$userAccess->user_id}}_view" <?php if($userAccess->acc_view == 1) { echo 'checked="checked"'; } ?> ></td>
+                    <td><input module_id="{{ $userAccess->id }}" class="create_checkb" type="checkbox" name="acuser_{{$userAccess->user_id}}_create" id="user_{{$userAccess->user_id}}_create" <?php if($userAccess->acc_create == 1) { echo 'checked="checked"'; } ?> ></td>
+                    <td><input module_id="{{ $userAccess->id }}" class="edit_checkb" type="checkbox" name="acuser_{{$userAccess->user_id}}_edit" id="user_{{$userAccess->user_id}}_edit" <?php if($userAccess->acc_edit == 1) { echo 'checked="checked"'; } ?> ></td>
+                    <td><input module_id="{{ $userAccess->id }}" class="delete_checkb" type="checkbox" name="acuser_{{$userAccess->user_id}}_delete" id="user_{{$userAccess->user_id}}_delete" <?php if($userAccess->acc_delete == 1) { echo 'checked="checked"'; } ?> ></td>
+                </tr>
+            @endforeach
         </table>
         <center><input class="btn btn-success" type="submit" name="Save"></center>
     </form>
@@ -68,15 +77,23 @@
 @push('scripts')
 <script>
 $(function () {
-    $("#tablea-access_rights").DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: '{{ url(config('laraadmin.adminRoute') . '/account_access_right') }}',
-        columns: [
-            { data: 'name', name: 'name'}
-        ]
-    });
+    $("#user_select_all").on("change", function() {
+		$(".module_checkb").prop('checked', this.checked);
+		$(".view_checkb").prop('checked', this.checked);
+		$(".edit_checkb").prop('checked', this.checked)
+		$(".create_checkb").prop('checked', this.checked);
+		$(".delete_checkb").prop('checked', this.checked);
+		$("#module_select_all").prop('checked', this.checked);
+		$("#view_all").prop('checked', this.checked);
+		$("#create_all").prop('checked', this.checked);
+		$("#edit_all").prop('checked', this.checked);
+		$("#delete_all").prop('checked', this.checked);
+	});
 
+    $("#view_select_all").on("change", function() {
+        $(".view_checkb").prop('checked', this.checked);
+        $("#view_all").prop('checked', this.checked);
+    });
 });
 </script>
 @endpush

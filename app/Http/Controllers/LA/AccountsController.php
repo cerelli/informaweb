@@ -31,11 +31,12 @@ class AccountsController extends Controller
     public $show_action = true;
     protected $usersAccess;
 
-    public function __construct(UsersAccessRightsRepositoryContract $usersAccess)
+    public function __construct(
+        UsersAccessRightsRepositoryContract $usersAccess
+    )
     {
-        dd($usersAccess);
-          $this->usersAccess = $usersAccess;
-
+        $this->usersAccess = $usersAccess;
+        /**dd($this->usersAccess->getAccountsUsersAccessRights(1));**/
     }
     /**
      * Display a listing of the Accounts.
@@ -108,13 +109,15 @@ class AccountsController extends Controller
             if(isset($account->id)) {
                 $module = Module::get('Accounts');
                 $module->row = $account;
-
+                $userAccessRights = $this->usersAccess->getAccountsUsersAccessRights($account->id);
                 return view('la.accounts.show', [
                     'module' => $module,
                     'view_col' => $module->view_col,
                     'no_header' => true,
                     'no_padding' => "no-padding"
-                ])->with('account', $account);
+                ])
+                ->with('account', $account)
+                ->with('userAccessRights',$userAccessRights);
             } else {
                 return view('errors.404', [
                     'record_id' => $id,
@@ -285,4 +288,62 @@ class AccountsController extends Controller
         $out->setData($data);
         return $out;
     }
+
+    public function save_account_access_rights(Request $request, $id)
+	{
+
+        foreach ($request->input() as $key => $value) {
+            $exp_key = explode('_', $key);
+            if($exp_key[0] == 'user'){
+                $arr_result_user_id[] = $exp_key[1];
+            }
+        }
+        $now = date("Y-m-d H:i:s");
+        foreach ($arr_result_user_id as $val_user_id) {
+            $view = 'acuser_'.$val_user_id.'_view';
+            $create = 'acuser_'.$val_user_id.'_create';
+            $edit = 'acuser_'.$val_user_id.'_edit';
+            $delete = 'acuser_'.$val_user_id.'_delete';
+            if(isset($request->$view)) {
+                $view = 1;
+            } else {
+                $view = 0;
+            }
+            if(isset($request->$create)) {
+                $create = 1;
+            } else {
+                $create = 0;
+            }
+            if(isset($request->$edit)) {
+                $edit = 1;
+            } else {
+                $edit = 0;
+            }
+            if(isset($request->$delete)) {
+                $delete = 1;
+            } else {
+                $delete = 0;
+            }
+
+            $query = DB::table('account_user')
+                    ->where('account_id', $id)
+                    ->where('user_id', $val_user_id);
+
+            if($query->count() == 0) {
+                DB::insert('insert into account_user (account_id, user_id, acc_view, acc_create, acc_edit, acc_delete, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?)', [$id, $val_user_id, $view, $create, $edit, $delete, $now, $now]);
+            } else {
+                DB::table('account_user')
+                    ->where('account_id', $id)
+                    ->where('user_id', $val_user_id)
+                    ->update([
+                        'acc_view' => $view,
+                        'acc_create' => $create,
+                        'acc_edit' => $edit,
+                        'acc_delete' => $delete,
+                        'updated_at' => $now
+                    ]);
+            }
+        }
+        return redirect(config('laraadmin.adminRoute') . '/accounts/' . $id . "#tab-access_rights");
+	}
 }

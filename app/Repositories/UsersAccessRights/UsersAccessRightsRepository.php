@@ -14,7 +14,7 @@ class UsersAccessRightsRepository implements UsersAccessRightsRepositoryContract
 
     public function __construct()
     {
-        dd($usersAccess->getAccountsUsersAccessRights(1));
+        $this->obj=$this;
     }
    /**
    * @param $account_id
@@ -26,18 +26,19 @@ class UsersAccessRightsRepository implements UsersAccessRightsRepositoryContract
                    ->leftJoin('account_user', 'account_user.user_id', '=', 'users.id')
                    ->leftJoin('role_user', 'role_user.user_id', '=', 'users.id')
                    ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
-                   ->select('users.name', 'account_user.id', 'account_user.acc_view', 'account_user.acc_create', 'account_user.acc_edit', 'account_user.acc_delete')
-                   ->whereNotIn('roles.name', ['SUPER_ADMIN','NORMAL_ADMIN'])
+                   ->select('users.id as user_id', 'users.name', 'account_user.id', 'account_user.acc_view', 'account_user.acc_create', 'account_user.acc_edit', 'account_user.acc_delete')
+                   ->whereNotIn('roles.name', ['SUPER_ADMIN'])
                    ->where('account_user.account_id', $account_id);
 
-       $union = DB::table('users')
+       $AccountUsersAccessRights = DB::table('users')
                                ->leftJoin('account_user', 'account_user.user_id', '=', 'users.id')
                                ->leftJoin('role_user', 'role_user.user_id', '=', 'users.id')
                                ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
-                               ->select('users.name', 'account_user.id', 'account_user.acc_view', 'account_user.acc_create', 'account_user.acc_edit', 'account_user.acc_delete')
-                               ->whereNotIn('roles.name', ['SUPER_ADMIN','NORMAL_ADMIN'])
+                               ->select('users.id as user_id', 'users.name', 'account_user.id', 'account_user.acc_view', 'account_user.acc_create', 'account_user.acc_edit', 'account_user.acc_delete')
+                               ->whereNotIn('roles.name', ['SUPER_ADMIN'])
                                ->union($first)
                                ->get();
-       return $union;
+
+       return $AccountUsersAccessRights;
    }
 }
