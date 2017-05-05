@@ -22,22 +22,25 @@ use Dwij\Laraadmin\Models\ModuleFields;
 use Dwij\Laraadmin\Models\ModuleFieldTypes;
 use Zizaco\Entrust\EntrustFacade as Entrust;
 use App\Repositories\UsersAccessRights\UsersAccessRightsRepositoryContract;
-
+use App\Repositories\ContactDetails\ContactDetailsInterface;
 
 use App\Models\Account;
+use App\Models\Contact;
 
 class AccountsController extends Controller
 {
     public $show_action = true;
     protected $usersAccess;
+    protected $contactDetails;
 
-    public function __construct(
-        UsersAccessRightsRepositoryContract $usersAccess
-    )
+    public function __construct(UsersAccessRightsRepositoryContract $usersAccess, ContactDetailsInterface $contactDetails)
     {
         $this->usersAccess = $usersAccess;
+        $this->contactDetails = $contactDetails;
         /**dd($this->usersAccess->getAccountsUsersAccessRights(1));**/
+        /**dd($this->contactDetails->getAllOfContact(1));**/
     }
+
     /**
      * Display a listing of the Accounts.
      *
@@ -105,11 +108,16 @@ class AccountsController extends Controller
     {
         if(Module::hasAccess("Accounts", "view")) {
 
-            $account = Account::find($id);
+            // $account = Account::with('contacts.contact_details')->find($id);
+            $account = Account::whereId($id)->with('contacts.contact_details')->first();
+
             if(isset($account->id)) {
                 $module = Module::get('Accounts');
+
                 $module->row = $account;
+                // dd($module);
                 $userAccessRights = $this->usersAccess->getAccountsUsersAccessRights($account->id);
+
                 return view('la.accounts.show', [
                     'module' => $module,
                     'view_col' => $module->view_col,
@@ -118,6 +126,7 @@ class AccountsController extends Controller
                 ])
                 ->with('account', $account)
                 ->with('userAccessRights',$userAccessRights);
+
             } else {
                 return view('errors.404', [
                     'record_id' => $id,
@@ -180,7 +189,9 @@ class AccountsController extends Controller
 
             $insert_id = Module::updateRow("Accounts", $request, $id);
 
-            return redirect()->route(config('laraadmin.adminRoute') . '.accounts.index');
+            // return redirect()->route(config('laraadmin.adminRoute') . '.accounts.index');
+            // return redirect()->route(config('laraadmin.adminRoute') . '.accounts.index');
+            return redirect(config('laraadmin.adminRoute') . '/accounts/' . $id);
 
         } else {
             return redirect(config('laraadmin.adminRoute') . "/");
@@ -278,15 +289,111 @@ class AccountsController extends Controller
                 }
 
                 if(Module::hasAccess("Accounts", "delete")) {
-                    $output .= Form::open(['route' => [config('laraadmin.adminRoute') . '.accounts.destroy', $data->data[$i][0]], 'method' => 'delete', 'style' => 'display:inline']);
-                    $output .= ' <button class="btn btn-danger btn-xs" type="submit"><i class="fa fa-times"></i></button>';
-                    $output .= Form::close();
+                    if(Account::hasAccess($data->data[$i][0], "delete", Auth::user()->id)) {
+                        $output .= Form::open(['route' => [config('laraadmin.adminRoute') . '.accounts.destroy', $data->data[$i][0]], 'method' => 'delete', 'style' => 'display:inline']);
+                        $output .= ' <button class="btn btn-danger btn-xs" type="submit"><i class="fa fa-times"></i></button>';
+                        $output .= Form::close();
+                    }
                 }
                 $data->data[$i][] = (string)$output;
             }
         }
         $out->setData($data);
         return $out;
+    }
+
+    public function add_contact(Request $request, $id)
+    {
+        // $contact = $request->input();
+        // $contact['account_id'] = $id;
+        $request->{'account_id'} = $id;
+
+        if(Module::hasAccess("Contacts", "create")) {
+
+            $rules = Module::validateRules("Contacts", $request);
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
+
+            $insert_id = Module::insert("Contacts", $request);
+
+            return redirect(config('laraadmin.adminRoute') . '/accounts/' . $id . "#tab-contacts");
+
+        } else {
+            return redirect(config('laraadmin.adminRoute') . "/");
+        }
+    }
+
+    /**
+     * Show the form for editing the specified contact.
+     *
+     * @param int $id contact ID
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function edit_contact(Request $request)
+    {
+        return $request->all();
+        if(Module::hasAccess("Contacts", "edit")) {
+            $contact = Contact::find($id);
+            if(isset($contact->id)) {
+                $module = Module::get('Contacts');
+
+                $module->row = $contact;
+
+                if(!accountid){
+                    return 'PIPPPPPPPOOOOOOOOOOOOOOOOOO';
+                } else {
+                    return 'PLUTTTOTO';
+                }
+
+
+                 return view('la.accounts.contacts.edit', [
+                     'module' => $module,
+                     'view_col' => $module->view_col,
+                 ])->with('contact', $contact);
+
+            } else {
+                return view('errors.404', [
+                    'record_id' => $id,
+                    'record_name' => ucfirst("contact"),
+                ]);
+            }
+        } else {
+            return redirect(config('laraadmin.adminRoute') . "/");
+        }
+    }
+
+    /**
+     * Update the specified contact in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id contact ID
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update_contact(Request $request, $id)
+    {
+
+        if(Module::hasAccess("Contacts", "edit")) {
+
+            $rules = Module::validateRules("Contacts", $request, true);
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();;
+            }
+
+            $insert_id = Module::updateRow("Contacts", $request, $id);
+
+            // return redirect()->route(config('laraadmin.adminRoute') . '.contacts.index');
+            return back();
+
+        } else {
+            return redirect(config('laraadmin.adminRoute') . "/");
+        }
     }
 
     public function save_account_access_rights(Request $request, $id)

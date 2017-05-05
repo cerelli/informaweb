@@ -178,6 +178,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Dwij\Laraadmin\LAProvider::class,
         App\Providers\UserAccessServiceProvider::class,
+        App\Providers\DbServiceProvider::class,
 
     ],
 

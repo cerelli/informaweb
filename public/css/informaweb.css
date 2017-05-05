@@ -1,0 +1,24 @@
+.btn-hidden{
+    display: none;
+}
+
+.panel-heading:hover .btn-hidden{
+    display: inline;
+    margin-left: 3px;
+}
+
+.panel-body .dats1:hover .btn-hidden{
+    display: inline;
+    margin-left: 3px;
+}
+
+.row.match-my-cols {
+    overflow: hidden;
+}
+
+
+div:after {
+  content: '';
+  display: block;
+  clear: both;
+}

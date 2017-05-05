@@ -24,14 +24,14 @@
 
 <div class="box">
     <div class="box-header">
-        
+
     </div>
     <div class="box-body">
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 {!! Form::model($account, ['route' => [config('laraadmin.adminRoute') . '.accounts.update', $account->id ], 'method'=>'PUT', 'id' => 'account-edit-form']) !!}
                     @la_form($module)
-                    
+
                     {{--
                     @la_input($module, 'title_id')
 					@la_input($module, 'is_person')
@@ -39,7 +39,6 @@
 					@la_input($module, 'name2')
 					@la_input($module, 'notes')
 					@la_input($module, 'account_account_type')
-					@la_input($module, 'account_user')
                     --}}
                     <br>
                     <div class="form-group">
@@ -57,7 +56,7 @@
 <script>
 $(function () {
     $("#account-edit-form").validate({
-        
+
     });
 });
 </script>

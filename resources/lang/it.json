@@ -1,4 +1,6 @@
 {
+    "Save": "Salva",
+    "Close": "Chiudi",
     "save page": "Salva la pagina",
     "Add Account": "Aggiungi Account",
     "Title": "Titolo",
@@ -6,5 +8,6 @@
     "Actions": "Azioni",
     "Name 1": "Nome 1",
     "Name 2": "Nome 2",
-    "Account account type": "Tipologia"
+    "Account account type": "Tipologia",
+    "Add Contact": "Aggiungi Contatto"
 }

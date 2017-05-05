@@ -1,44 +1,21 @@
-@extends('master')
-pippo
-@section('content')
-    <table class="table table-bordered" id="tablea-access_rights">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>acc_view</th>
-                <th>acc_create</th>
-                <th>acc_edit</th>
-            </tr>
-        </thead>
-    </table>
-@stop
+<div>
+    {!! Form::open(['action' => 'LA\Contact_detailsController@store', 'id' => 'contact_detail-add-form']) !!}
+    <div class="modal-body">
+        <div class="box-body">
+            {{ dd($module) }}
 
-@push('scripts')
-<script>
-$(function() {
-    $('#users-table').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: '{!! route('test.data') !!}',
-        columns: [
-            { data: 'account_user_id', name: 'account_user_id' },
-            { data: 'name', name: 'name' },
-            { data: 'acc_view', name: 'acc_view' },
-            { data: 'acc_create', name: 'acc_create' },
-            { data: 'acc_edit', name: 'acc_edit' }
-        ]
-    });
-    $("#tablea-access_rights").DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: '{{ url(config('laraadmin.adminRoute') . '/account_access_right') }}',
-        columns: [
-            { data: 'name', name: 'name'},
-            { data: 'id', name: 'id' }
-
-        ]
-    });
-});
-</script>
-@endpush
+            {{--
+            @la_input($module, 'contact_id')
+            @la_input($module, 'contact_detail_type_id')
+            @la_input($module, 'communication_type_id')
+            @la_input($module, 'value')
+            @la_input($module, 'notes')
+            --}}
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('Close') }}</button>
+        {!! Form::submit( 'Submit', ['class'=>'btn btn-success']) !!}
+    </div>
+    {!! Form::close() !!}
+</div>

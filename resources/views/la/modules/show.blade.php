@@ -262,7 +262,7 @@ use Dwij\Laraadmin\Models\ModuleFields;
 				<div class="box-body">
 					<div class="form-group">
 						<label for="label">Field Label :</label>
-						{{ Form::text("label", null, ['class'=>'form-control', 'placeholder'=>'Field Label', 'data-rule-minlength' => 2, 'data-rule-maxlength'=>20, 'required' => 'required']) }}
+						{{ Form::text("label", null, ['class'=>'form-control', 'placeholder'=>'Field Label', 'data-rule-minlength' => 2, 'data-rule-maxlength'=>30, 'required' => 'required']) }}
 					</div>
 
 					<div class="form-group">
@@ -288,7 +288,7 @@ use Dwij\Laraadmin\Models\ModuleFields;
 						if($module->is_gen == 0 && count($col_list) > 0) { ?>
 							{{ Form::select("colname", $col_list, $col_list, ['class'=>'form-control', 'required' => 'required']) }}
 						<?php } else { ?>
-							{{ Form::text("colname", null, ['class'=>'form-control', 'placeholder'=>'Column Name (lowercase)', 'data-rule-minlength' => 2, 'data-rule-maxlength'=>20, 'data-rule-banned-words' => 'true', 'required' => 'required']) }}
+							{{ Form::text("colname", null, ['class'=>'form-control', 'placeholder'=>'Column Name (lowercase)', 'data-rule-minlength' => 2, 'data-rule-maxlength'=>30, 'data-rule-banned-words' => 'true', 'required' => 'required']) }}
 						<?php }	?>
 					</div>
 

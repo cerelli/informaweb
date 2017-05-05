@@ -18,6 +18,7 @@ $as = "";
 if(\Dwij\Laraadmin\Helpers\LAHelper::is_recent_laravel_version()) {
 	$as = config('laraadmin.adminRoute').'.';
 
+
 	// Routes for Laravel 5.3
 	Route::get('/logout', 'Auth\LoginController@logout');
 }
@@ -83,7 +84,32 @@ Route::group(['as' => $as, 'middleware' => ['auth', 'permission:ADMIN_PANEL']], 
     Route::resource(config('laraadmin.adminRoute') . '/accounts', 'LA\AccountsController');
     Route::get(config('laraadmin.adminRoute') . '/account_dt_ajax', 'LA\AccountsController@dtajax');
 	Route::get(config('laraadmin.adminRoute') . '/account_access_right', 'LA\AccountsController@usersAccessRights');
-	Route::post(config('laraadmin.adminRoute') . '/save_account_access_rights/{id}', 'LA\AccountsController@save_account_access_rights');
+	Route::post(config('laraadmin.adminRoute') . '/save_account_access_rights/{id}', 'LA\AccountsController@saveAccountAccessRights');
+	Route::post(config('laraadmin.adminRoute') . '/add_contact/{id}', 'LA\AccountsController@add_contact');
+	Route::post(config('laraadmin.adminRoute') . '/accounts/edit_contact', 'LA\AccountsController@edit_contact');
+	Route::post(config('laraadmin.adminRoute') . '/update_contact', 'LA\AccountsController@update_contact');
 
+    /* ================== Contact_detail_types ================== */
+    Route::resource(config('laraadmin.adminRoute') . '/contact_detail_types', 'LA\Contact_detail_typesController');
+    Route::get(config('laraadmin.adminRoute') . '/contact_detail_type_dt_ajax', 'LA\Contact_detail_typesController@dtajax');
 
+    /* ================== Communication_types ================== */
+    Route::resource(config('laraadmin.adminRoute') . '/communication_types', 'LA\Communication_typesController');
+    Route::get(config('laraadmin.adminRoute') . '/communication_type_dt_ajax', 'LA\Communication_typesController@dtajax');
+
+    /* ================== Contact_types ================== */
+    Route::resource(config('laraadmin.adminRoute') . '/contact_types', 'LA\Contact_typesController');
+    Route::get(config('laraadmin.adminRoute') . '/contact_type_dt_ajax', 'LA\Contact_typesController@dtajax');
+
+    /* ================== Offices ================== */
+    Route::resource(config('laraadmin.adminRoute') . '/offices', 'LA\OfficesController');
+    Route::get(config('laraadmin.adminRoute') . '/office_dt_ajax', 'LA\OfficesController@dtajax');
+
+    /* ================== Contacts ================== */
+    Route::resource(config('laraadmin.adminRoute') . '/contacts', 'LA\ContactsController');
+    Route::get(config('laraadmin.adminRoute') . '/contact_dt_ajax', 'LA\ContactsController@dtajax');
+
+    /* ================== ContactDetails ================== */
+    Route::resource(config('laraadmin.adminRoute') . '/contact_details', 'LA\Contact_detailsController');
+    Route::get(config('laraadmin.adminRoute') . '/contact_detail_dt_ajax', 'LA\Contact_detailsController@dtajax');
 });

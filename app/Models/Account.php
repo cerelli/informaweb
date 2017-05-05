@@ -13,7 +13,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\User;
+use App\Models\Title;
+use App\Models\Contact;
 use DB;
+use Zizaco\Entrust\EntrustFacade as Entrust;
 
 class Account extends Model
 {
@@ -31,8 +34,20 @@ class Account extends Model
 
     public function users(){
         return $this->belongsToMany(User::class)
-            ->withPivot('acc_view','acc_create','acc_edit','acc_delete');
+            ->withPivot('acc_view','acc_edit','acc_delete');
     }
+
+    public function title(){
+        return $this->belongsTo(Title::class, 'title_id');
+    }
+
+    public function contacts(){
+        return $this->hasMany(Contact::class, 'account_id');
+    }
+
+//    public function contact_details(){
+//        return $this->hasManyThrough('App\Models\Contact_detail', 'App\Models\Contact');
+//    }
 
     /**
      * Get Specific Account Access for login user or specific user ($user_id)
@@ -46,17 +61,22 @@ class Account extends Model
      */
     public static function hasAccess($account_id, $access_type = "view", $user_id = 0)
     {
-        $roles = array();
 
-        if($access_type == null || $access_type == "") {
-            $access_type = "view";
-        }
-
-        $account_perm = DB::table('account_user')->where('user_id', $user_id)->where('account_id', $account_id)->first();
-        if(isset($account_perm->{"acc_" . $access_type}) && $account_perm->{"acc_" . $access_type} == 1) {
+        if (Entrust::hasRole('SUPER_ADMIN')) {
             return true;
         } else {
-            return false;
+            if($access_type == null || $access_type == "") {
+                $access_type = "view";
+            }
+
+
+            $account_perm = DB::table('account_user')->where('user_id', $user_id)->where('account_id', $account_id)->first();
+            if(isset($account_perm->{"acc_" . $access_type}) && $account_perm->{"acc_" . $access_type} == 1) {
+                return true;
+            } else {
+                return false;
+            }
         }
+
     }
 }

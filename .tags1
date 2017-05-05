@@ -1,0 +1,15 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	0	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+Account	/run/media/marco/Secondario/www/informaweb/app/Models/Account.php	/^class Account extends Model$/;"	class	line:19
+table	/run/media/marco/Secondario/www/informaweb/app/Models/Account.php	/^    protected $table = 'accounts';$/;"	variable	line:23
+hidden	/run/media/marco/Secondario/www/informaweb/app/Models/Account.php	/^    protected $hidden = [$/;"	variable	line:25
+guarded	/run/media/marco/Secondario/www/informaweb/app/Models/Account.php	/^    protected $guarded = [];$/;"	variable	line:29
+dates	/run/media/marco/Secondario/www/informaweb/app/Models/Account.php	/^    protected $dates = ['deleted_at'];$/;"	variable	line:31
+users	/run/media/marco/Secondario/www/informaweb/app/Models/Account.php	/^    public function users(){$/;"	function	line:33
+hasAccess	/run/media/marco/Secondario/www/informaweb/app/Models/Account.php	/^    public static function hasAccess($account_id, $access_type = "view", $user_id = 0)$/;"	function	line:48
+access_type	/run/media/marco/Secondario/www/informaweb/app/Models/Account.php	/^                $access_type = "view";$/;"	variable	line:54
+account_perm	/run/media/marco/Secondario/www/informaweb/app/Models/Account.php	/^            $account_perm = DB::table('account_user')->where('user_id', $user_id)->where('account_id', $account_id)->first();$/;"	variable	line:58

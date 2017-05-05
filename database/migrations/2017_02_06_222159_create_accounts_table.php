@@ -67,7 +67,7 @@ class CreateAccountsTable extends Migration
                 "label" => "Notes",
                 "field_type" => "Textarea",
                 "unique" => false,
-                "defaultvalue" => "",
+                "defaultvalue" => " ",
                 "minlength" => 0,
                 "maxlength" => 0,
                 "required" => false,
@@ -84,16 +84,45 @@ class CreateAccountsTable extends Migration
                 "listing_col" => true,
                 "popup_vals" => "@account_types",
             ], [
-                "colname" => "account_user",
-                "label" => "account_user",
-                "field_type" => "Multiselect",
-                "unique" => false,
+                "colname" => "vat_number",
+                "label" => "vat_number",
+                "field_type" => "String",
+                "unique" => true,
                 "defaultvalue" => "",
+                "minlength" => 11,
+                "maxlength" => 11,
+                "required" => false,
+                "listing_col" => false
+            ], [
+                "colname" => "fiscal_code",
+                "label" => "fiscal_code",
+                "field_type" => "String",
+                "unique" => true,
+                "defaultvalue" => "",
+                "minlength" => 16,
+                "maxlength" => 16,
+                "required" => false,
+                "listing_col" => false
+            ], [
+                "colname" => "is_blocked",
+                "label" => "is_blocked",
+                "field_type" => "Checkbox",
+                "unique" => false,
+                "defaultvalue" => "0",
                 "minlength" => 0,
                 "maxlength" => 0,
                 "required" => false,
-                "listing_col" => false,
-                "popup_vals" => "@users",
+                "listing_col" => false
+            ], [
+                "colname" => "block_alert_message",
+                "label" => "block_alert_message",
+                "field_type" => "String",
+                "unique" => false,
+                "defaultvalue" => "",
+                "minlength" => 0,
+                "maxlength" => 30,
+                "required" => false,
+                "listing_col" => false
             ]
         ]);
         

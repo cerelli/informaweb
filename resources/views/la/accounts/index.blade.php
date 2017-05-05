@@ -103,7 +103,7 @@ $(function () {
             searchPlaceholder: "Search"
         },
         @if($show_actions)
-        columnDefs: [ { orderable: false, targets: [-1] }],
+            columnDefs: [ { orderable: false, targets: [-1] }],
         @endif
     });
     $("#account-add-form").validate({
