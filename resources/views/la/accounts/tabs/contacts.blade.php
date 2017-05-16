@@ -69,12 +69,12 @@
         $("#contact-panel .editModalBtn").on("click", function() {
             var info = JSON.parse($(this).attr("info"));
 
-            var url = $("#contact-update-form").attr("action");
-            index = url.lastIndexOf("/");
-            url2 = url.substring(0, index+1)+info.id;
+            //var url = $("#contact-update-form").attr("action");
+            //index = url.lastIndexOf("/");
+            //url2 = url.substring(0, index+1)+info.id;
 
             // $("#contact-update-form").attr("action", url2)
-
+/*
             $.ajax({
                 url: $("#urlController").val()+'/editModalContact/'+info.id,
                 method: 'GET',
@@ -93,12 +93,12 @@
                     console.log(errors);
                     // Render the errors with js ...
                 }
-            });
+            });*/
             $('#contactId').val(info.id);
             $.each(info, function(index, value) {
                 $("#EditModal input[name="+index+"]").val(value);
             });
-            $("#contact-update-form").attr("action", url2)
+            //$("#contact-update-form").attr("action", url2)
 
             $("#EditModal").modal("show");
             // var url = $("#contact-update-form").attr("action");
@@ -113,19 +113,20 @@
             e.preventDefault();
             // console.log($("#contactId").val());
             var contactId = $("#contactId").val();
-            var first_name = $("#formDati input[name=first_name]").val();
-            var newURL = '{{route(config('laraadmin.adminRoute') . '.updateModalContact',1)}}';
+            //var first_name = $("#formDati input[name=first_name]").val();
+            var newURL = '/{{ config('laraadmin.adminRoute') }}/updateModalContact/'+contactId;
             console.log('qui');
             $.ajax({
                 // url: $("#urlController").val()+'/updateModalContact/'+contactId,
                 url: newURL,
                 type: 'POST',
-                // data: {
-                //     'first_name': first_name,
-                // },
+                data: jQuery("#updateModalForm").serialize(),
                 success: function(data){
                     console.log(data);
                     // $('#contact_panel_'+contactId).load(location.href + ' #contact_panel_'+contactId);
+
+                    // Nasconde la modale SOLO se il salvataggio viene effettuato correttamente
+                    $('#EditModal').modal('hide');
                 },
                 error: function(data){
                     var errors = data.responseJSON;
@@ -133,7 +134,6 @@
                     // Render the errors with js ...
                 }
             });
-            $('#EditModal').modal('hide');
         });
     });
 

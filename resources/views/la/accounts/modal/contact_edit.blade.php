@@ -10,14 +10,13 @@
 
 
             <div class="modal-body">
+                {!! form::open(['url' => '#', 'method' => 'post', 'id' => 'updateModalForm']) !!}
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" id="contactId" value="">
-                <input type="hidden" id="urlController" value="{{ url(config('laraadmin.adminRoute')) }}"=>
                 {{-- <form id="formDati" class="form-horizontal" role="form"> --}}
                 {{-- {!! Form::open(['action' => ['LA\ContactsController@updateModal',1], 'id' => 'contact-edit-modal-form']) !!} --}}
                 {{-- {!! Form::model($contact, ['method'=>'put', 'url' => config('laraadmin.adminRoute') . '/contacts/'. $contact->id,  'id' => 'contact-update-form']) !!} --}}
                 {{-- {!! Form::model($contact, ['route' => [config('laraadmin.adminRoute') . '.updateModalContact', 1 ], 'method'=>'PUT', 'id' => 'contact-update-form']) !!} --}}
-                {!! form::open(['url' => '#', 'method' => 'post']) !!}
                     <div class="box-body">
                         @php ($fields = array('title_id','contact_type_id','office_id','first_name','last_name','notes'))
                         @la_formMultiple("Contacts", $fields)
@@ -32,7 +31,6 @@
                         @la_input($module, 'account_user')
                         --}}
                     </div>
-                    {!! Form::submit( 'Submit', ['class'=>'btn btn-success']) !!}
                 {!! Form::close() !!}
                 {{-- </form> --}}
                 {{-- {!! Form::submit( 'Submit', ['class'=>'btn btn-success', 'id'=>'btn_submit']) !!} --}}
