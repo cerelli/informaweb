@@ -72,6 +72,7 @@
 					@la_input($module, 'last_name')
 					@la_input($module, 'notes')
                     --}}
+
                 </div>
             </div>
             <div class="modal-footer">

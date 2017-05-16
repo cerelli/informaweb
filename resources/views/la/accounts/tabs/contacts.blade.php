@@ -16,37 +16,24 @@
                 <div class="row">
                     @foreach ($row as $contact)
                         <div class="col-md-4 col-sm-12"  style = "padding-bottom: 15px; padding-top: 15px;">
-                            <div class="panel panel-default" >
+                            <div class="panel panel-default" id="contact_panel_{{ $contact->id }}">
                                 <div class="panel-heading" >
                                     <div class="col-xs-3 col-sm-6">
                                         <h3 class="panel-title" style = "padding-bottom: 3px; padding-top: 3px;">
                                             @la_displayField($contact, 'first_name', 'Contacts')
                                             @la_displayField($contact, 'last_name', 'Contacts')
                                         </h3>
-
                                     </div>
                                     <div class="col-xs-3 col-sm-6">
-                                        <a href="#" class="pull-right btn btn-xs btn-danger btn-hidden" >
-                                            <i class="fa fa-times" aria-hidden="true"></i>
-                                        </a>
-                                        @la_access("Contacts", "edit")
+                                        <div class="dd" id="contact-panel">
 
-                                        <a href="#modal-edit-contact?a=<?php echo $contact->id; ?>" id="openModal<?php echo $contact->id; ?>" class="pull-right btn btn-xs btn-warning btn-hidden">
-                                            <i class="fa fa-edit" aria-hidden="true"></i>
-                                        </a>
-                                        <a href="{{ url(config('laraadmin.adminRoute') . '/contacts/'.$contact->id.'/edit', ['account' => 2]) }}" id="modal-edit" class="pull-right btn btn-xs btn-warning btn-hidden">
-                                            <i class="fa fa-edit" aria-hidden="true"></i>
-                                        </a>
-                                        <a href="#modal-edit-contact" data-hover="tooltip" data-placement="top" data-target="#modal-edit-contact" data-toggle="modal" id="modal-edit" title="Edit"></a>
-
-                                    <button type="button" class="btn btn-primary btn-lg" id="editContact"
-                                        data-toggle="modal"
-                                        data-target="#modal-edit-contact"
-                                        data-value="{{ $contact->id }}"
-                                        >Edit Contact
-                                    </button>
-<a href="{{ url(config('laraadmin.adminRoute') . '/edit_contact/' . $contact->id . '?account='.$account->id)}}" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>
-                                        @endla_access
+                                            <a href="#" class="pull-right btn btn-xs btn-danger btn-hidden" >
+                                                <i class="fa fa-times" aria-hidden="true"></i>
+                                            </a>
+                                            @la_access("Contacts", "edit")
+                                                <?php echo iWHelper::print_contact_editor('Contacts', $contact); ?>
+                                            @endla_access
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="panel-body">
@@ -69,23 +56,127 @@
 </div>
 
 
-{{csrf_field()}}
+<meta name="csrf-token" content="{{ csrf_token() }}">
 @push('scripts')
     <script>
-    $('#modal-edit-contact').on('show.bs.modal', function (e) {
-        var id = $(e.relatedTarget).attr('data-value');
-        $('#id').val(id);
-        $.post('edit_contact', {'id': id, '_token':$('input[name=_token]').val()}, function(data) {
-            console.log(data);
+    $.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+    });
+    $(document).ready(function(){
+
+        $("#contact-panel .editModalBtn").on("click", function() {
+            var info = JSON.parse($(this).attr("info"));
+
+            var url = $("#contact-update-form").attr("action");
+            index = url.lastIndexOf("/");
+            url2 = url.substring(0, index+1)+info.id;
+
+            // $("#contact-update-form").attr("action", url2)
+
+            $.ajax({
+                url: $("#urlController").val()+'/editModalContact/'+info.id,
+                method: 'GET',
+                dataType: "json",
+
+                // data: {
+                //     'first_name': first_name,
+                // },
+                success: function(data){
+                    console.log('data');
+                    console.log(data);
+                    // $('#contact_panel_'+contactId).load(location.href + ' #contact_panel_'+contactId);
+                },
+                error: function(data){
+                    var errors = data.responseJSON;
+                    console.log(errors);
+                    // Render the errors with js ...
+                }
+            });
+            $('#contactId').val(info.id);
+            $.each(info, function(index, value) {
+                $("#EditModal input[name="+index+"]").val(value);
+            });
+            $("#contact-update-form").attr("action", url2)
+
+            $("#EditModal").modal("show");
+            // var url = $("#contact-update-form").attr("action");
+            // console.log(url);
+        });
+
+        // $("#EditModal").on('hidden.bs.modal', function(){
+        //     alert("Modal window has been completely closed.");
+        // });
+
+        $('.modal-footer').on('click', '.save', function(e) {
+            e.preventDefault();
+            // console.log($("#contactId").val());
+            var contactId = $("#contactId").val();
+            var first_name = $("#formDati input[name=first_name]").val();
+            var newURL = '{{route(config('laraadmin.adminRoute') . '.updateModalContact',1)}}';
+            console.log('qui');
+            $.ajax({
+                // url: $("#urlController").val()+'/updateModalContact/'+contactId,
+                url: newURL,
+                type: 'POST',
+                // data: {
+                //     'first_name': first_name,
+                // },
+                success: function(data){
+                    console.log(data);
+                    // $('#contact_panel_'+contactId).load(location.href + ' #contact_panel_'+contactId);
+                },
+                error: function(data){
+                    var errors = data.responseJSON;
+                    console.log(errors);
+                    // Render the errors with js ...
+                }
+            });
+            $('#EditModal').modal('hide');
         });
     });
 
-    // $(document).ready(function(){
-    //     $(document).on('click', '#editContact', function(event) {
-    //         var id = $("#editContact").html($(event.relatedTarget).data('value'));
-    //         console.log(id);
-    //     });
-    // });
+        // $("#btn_submit").on("click", function(e) {
+        //     e.preventDefault();
+        //
+        //     //var info = JSON.parse($(this).attr("info"));
+        //     alert("info");
+        // //     $.post('updateModalContact',{'_token':$('input[name=_token]')})
+        // //          .done(function(response){
+        // //              var obj = jQuery.parseJSON(response);
+        // //              if(obj.success == true){
+        // //                  initializeMap();
+        // //              }
+        // //              else{
+        // //                  errorHandler();
+        // //
+        // //                  else {
+        // //                      errorHandler();
+        // //                  }
+        // //              }
+        // //          });
+        // });
+        //
+
+        // $("#contact-panel .editModalBtn").on("click", function() {
+        //     var info = JSON.parse($(this).attr("info"));
+        //     // console.log(info);
+        //     var url = $("#contact-edit-modal-form").attr("action");
+        //     index = url.lastIndexOf("/");
+        //     url2 = url.substring(0, index+1)+info.id;
+        //     // console.log(url2);
+        //     $("#contact-edit-modal-form").attr("action", url2)
+        //     $.each(info, function(index, value) {
+        //         // console.log( index + ": " + value );
+        //         $("#EditModal input[name="+index+"]").val(value);
+        //     });
+        //     // $("#EditModal input[name=first_name]").val(info.first_name);
+        //     // $("#EditModal input[name=name]").val(info.name);
+        //     // $("#EditModal input[name=icon]").val(info.icon);
+        //     $("#EditModal").modal("show");
+        // });
+
     </script>
 @endpush
 

@@ -335,7 +335,8 @@ class AccountsController extends Controller
      */
     public function edit_contact(Request $request)
     {
-        return $request->all();
+        return $request;
+        return response()->json(['success' => 'Ok']);
         if(Module::hasAccess("Contacts", "edit")) {
             $contact = Contact::find($id);
             if(isset($contact->id)) {
@@ -383,7 +384,7 @@ class AccountsController extends Controller
             $validator = Validator::make($request->all(), $rules);
 
             if($validator->fails()) {
-                return redirect()->back()->withErrors($validator)->withInput();;
+                return redirect()->back()->withErrors($validator)->withInput();
             }
 
             $insert_id = Module::updateRow("Contacts", $request, $id);

@@ -87,7 +87,7 @@ Route::group(['as' => $as, 'middleware' => ['auth', 'permission:ADMIN_PANEL']], 
 	Route::post(config('laraadmin.adminRoute') . '/save_account_access_rights/{id}', 'LA\AccountsController@saveAccountAccessRights');
 	Route::post(config('laraadmin.adminRoute') . '/add_contact/{id}', 'LA\AccountsController@add_contact');
 	Route::post(config('laraadmin.adminRoute') . '/accounts/edit_contact', 'LA\AccountsController@edit_contact');
-	Route::post(config('laraadmin.adminRoute') . '/update_contact', 'LA\AccountsController@update_contact');
+	Route::post(config('laraadmin.adminRoute') . '/update_contact', 'LA\AccountsController@update_contact')->name('updateContact');
 
     /* ================== Contact_detail_types ================== */
     Route::resource(config('laraadmin.adminRoute') . '/contact_detail_types', 'LA\Contact_detail_typesController');
@@ -108,6 +108,13 @@ Route::group(['as' => $as, 'middleware' => ['auth', 'permission:ADMIN_PANEL']], 
     /* ================== Contacts ================== */
     Route::resource(config('laraadmin.adminRoute') . '/contacts', 'LA\ContactsController');
     Route::get(config('laraadmin.adminRoute') . '/contact_dt_ajax', 'LA\ContactsController@dtajax');
+    Route::post(config('laraadmin.adminRoute') . '/contact_modal_ajax', 'LA\ContactsController@modalajax');
+	Route::post(config('laraadmin.adminRoute') . '/updateModalContact/{id}', 'LA\ContactsController@updateModal')->name('updateModalContact');
+	Route::get(config('laraadmin.adminRoute') . '/editModalContact/{id}', 'LA\ContactsController@editModal');
+
+
+
+
 
     /* ================== ContactDetails ================== */
     Route::resource(config('laraadmin.adminRoute') . '/contact_details', 'LA\Contact_detailsController');

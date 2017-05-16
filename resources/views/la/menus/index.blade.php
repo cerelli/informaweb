@@ -35,7 +35,7 @@ use Dwij\Laraadmin\Models\Module;
 							</ul>
 						</div>
 						<div class="tab-pane" id="tab-custom-link">
-							
+
 							{!! Form::open(['action' => '\Dwij\Laraadmin\Controllers\MenuController@store', 'id' => 'menu-custom-form']) !!}
 								<input type="hidden" name="type" value="custom">
 								<div class="form-group">
@@ -138,12 +138,12 @@ $(function () {
 		});
 	});
 	$("#menu-custom-form").validate({
-		
+
 	});
 
 	$("#menu-nestable .editMenuBtn").on("click", function() {
 		var info = JSON.parse($(this).attr("info"));
-		
+
 		var url = $("#menu-edit-form").attr("action");
 		index = url.lastIndexOf("/");
 		url2 = url.substring(0, index+1)+info.id;
@@ -156,9 +156,9 @@ $(function () {
 	});
 
 	$("#menu-edit-form").validate({
-		
+
 	});
-	
+
 	$("#tab-modules .addModuleMenu").on("click", function() {
 		var module_id = $(this).attr("module_id");
 		$.ajax({

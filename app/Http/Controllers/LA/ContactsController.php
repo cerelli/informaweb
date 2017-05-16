@@ -147,6 +147,30 @@ class ContactsController extends Controller
     }
 
     /**
+     * Show the form for editing the specified contact.
+     *
+     * @param int $id contact ID
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function editModal($id)
+    {
+        if(Module::hasAccess("Contacts", "edit")) {
+            $contact = Contact::find($id);
+            if(isset($contact->id)) {
+                $module = Module::get('Contacts');
+
+                $module->row = $contact;
+
+                return response()->json($contact);
+            } else {
+                return response()->json(['response' => 'error']);
+            }
+        } else {
+            return response()->json(['response' => 'not found']);
+        }
+    }
+
+    /**
      * Update the specified contact in storage.
      *
      * @param \Illuminate\Http\Request $request
@@ -155,7 +179,7 @@ class ContactsController extends Controller
      */
     public function update(Request $request, $id)
     {
-
+        dd($request);
         if(Module::hasAccess("Contacts", "edit")) {
 
             $rules = Module::validateRules("Contacts", $request, true);
@@ -168,12 +192,65 @@ class ContactsController extends Controller
 
             $insert_id = Module::updateRow("Contacts", $request, $id);
 
-            // return redirect()->route(config('laraadmin.adminRoute') . '.contacts.index');
-            return back();
+            return redirect()->route(config('laraadmin.adminRoute') . '.contacts.index');
+
 
         } else {
             return redirect(config('laraadmin.adminRoute') . "/");
         }
+    }
+
+    /**
+     * Update the specified contact in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id contact ID
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function updateModal(Request $request, $id)
+    {
+
+        if(Module::hasAccess("Contacts", "edit")) {
+
+            $rules = Module::validateRules("Contacts", $request, true);
+            return response()->json(['response' => $rules]);
+            $validator = Validator::make($request->all(), $rules);
+
+            if($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();;
+            }
+
+            $insert_id = Module::updateRow("Contacts", $request, $id);
+
+            return redirect()->route(config('laraadmin.adminRoute') . '.contacts.index');
+
+
+        } else {
+            return redirect(config('laraadmin.adminRoute') . "/");
+        }
+        // if(Module::hasAccess("Contacts", "edit")) {
+        //
+        //     $rules = Module::validateRules("Contacts", $request, true);
+        //
+        //     $validator = Validator::make($request->all(), $rules);
+        //
+        //     if($validator->fails()) {
+        //         return response()->json(['response' => 'noooo']);
+        //     }
+        //
+        //     $insert_id = Module::updateRow("Contacts", $request, $id);
+        //
+        //     return response()->json($request);
+        //
+        // } else {
+        //     return response()->json(['response' => 'due']);
+        // }
+
+        // if ($request->isMethod('post')){
+        //     return response()->json($request);
+        // }
+        //
+        // return response()->json(['response' => 'This is get method']);
     }
 
     /**
@@ -259,4 +336,98 @@ class ContactsController extends Controller
         $out->setData($data);
         return $out;
     }
+
+    /**
+     * Server side Modal fetch via Ajax
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function modalajax(Request $request)
+    {
+        $contact = Contact::find($request->id);
+
+        return $contact;
+        if(Module::hasAccess("Contacts", "edit")) {
+            $contact = Contact::find($id);
+            if(isset($contact->id)) {
+                $module = Module::get('Contacts');
+
+                $module->row = $contact;
+
+                return view('la.contacts.edit', [
+                    'module' => $module,
+                    'view_col' => $module->view_col,
+                ])->with('contact', $contact);
+            } else {
+                return view('errors.404', [
+                    'record_id' => $id,
+                    'record_name' => ucfirst("contact"),
+                ]);
+            }
+        } else {
+            return redirect(config('laraadmin.adminRoute') . "/");
+        }
+
+
+
+        $module = Module::get('Contacts');
+        return 'OKK';
+        $listing_cols = Module::getListingColumns('Contacts');
+
+        $values = DB::table('contacts')->select($listing_cols)->whereNull('deleted_at');
+        $out = Datatables::of($values)->make();
+        $data = $out->getData();
+
+        $fields_popup = ModuleFields::getModuleFields('Contacts');
+
+        for($i = 0; $i < count($data->data); $i++) {
+            for($j = 0; $j < count($listing_cols); $j++) {
+                $col = $listing_cols[$j];
+                if($fields_popup[$col] != null && starts_with($fields_popup[$col]->popup_vals, "@")) {
+                    //slam_modifie_start
+                    $field_type = ModuleFieldTypes::find($fields_popup[$col]->field_type);
+                    switch($field_type->name) {
+                        case 'Multiselect':
+                            $multiValues = ModuleFields::getFieldValue($fields_popup[$col], $data->data[$i][$j]);
+                            $multiValues = str_replace(['[', ']', '"'], '', $multiValues);
+                            $multiValues = explode(",", $multiValues);
+                            $value = '';
+                            foreach($multiValues as $multiValue) {
+                                $value .= " <span class = 'label label-default'>".ModuleFields::getFieldValue($fields_popup[$col], $multiValue)."</span>";
+                            }
+
+                            $data->data[$i][$j] = $value;
+                            break;
+                        default:
+                            $data->data[$i][$j] = ModuleFields::getFieldValue($fields_popup[$col], $data->data[$i][$j]);
+                    }
+                    //slam_modifie_stop
+                }
+                if($col == $module->view_col) {
+                    $data->data[$i][$j] = '<a href="' . url(config('laraadmin.adminRoute') . '/contacts/' . $data->data[$i][0]) . '">' . $data->data[$i][$j] . '</a>';
+                }
+                // else if($col == "author") {
+                //    $data->data[$i][$j];
+                // }
+            }
+
+            if($this->show_action) {
+                $output = '';
+                if(Module::hasAccess("Contacts", "edit")) {
+                    $output .= '<a href="' . url(config('laraadmin.adminRoute') . '/contacts/' . $data->data[$i][0] . '/edit') . '" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>';
+                }
+
+                if(Module::hasAccess("Contacts", "delete")) {
+                    $output .= Form::open(['route' => [config('laraadmin.adminRoute') . '.contacts.destroy', $data->data[$i][0]], 'method' => 'delete', 'style' => 'display:inline']);
+                    $output .= ' <button class="btn btn-danger btn-xs" type="submit"><i class="fa fa-times"></i></button>';
+                    $output .= Form::close();
+                }
+                $data->data[$i][] = (string)$output;
+            }
+        }
+        $out->setData($data);
+        return $out;
+    }
+
 }
