@@ -20,6 +20,7 @@ use Collective\Html\FormFacade as Form;
 use Dwij\Laraadmin\Models\Module;
 use Dwij\Laraadmin\Models\ModuleFields;
 use Dwij\Laraadmin\Models\ModuleFieldTypes;
+use Illuminate\Support\Facades\Input;
 
 use App\Models\Contact;
 
@@ -57,6 +58,56 @@ class ContactsController extends Controller
         //
     }
 
+    public function add_contact(Request $request, $id)
+    {
+        // $contact = $request->input();
+        // $contact['account_id'] = $id;
+        $request->{'account_id'} = $id;
+
+        if(Module::hasAccess("Contacts", "create")) {
+
+            $rules = Module::validateRules("Contacts", $request);
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
+
+            $insert_id = Module::insert("Contacts", $request);
+
+            return redirect(config('laraadmin.adminRoute') . '/accounts/' . $id . "#tab-contacts");
+
+        } else {
+            return redirect(config('laraadmin.adminRoute') . "/");
+        }
+    }
+
+
+    public function delete_contact_old(Request $request, $id)
+    {
+        // $contact = $request->input();
+        // $contact['account_id'] = $id;
+        $request->{'account_id'} = $id;
+
+        if(Module::hasAccess("Contacts", "create")) {
+
+            $rules = Module::validateRules("Contacts", $request);
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
+
+            $insert_id = Module::insert("Contacts", $request);
+
+            return redirect(config('laraadmin.adminRoute') . '/accounts/' . $id . "#tab-contacts");
+
+        } else {
+            return redirect(config('laraadmin.adminRoute') . "/");
+        }
+    }
     /**
      * Store a newly created contact in database.
      *
@@ -179,13 +230,12 @@ class ContactsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        dd($request);
         if(Module::hasAccess("Contacts", "edit")) {
 
             $rules = Module::validateRules("Contacts", $request, true);
 
             $validator = Validator::make($request->all(), $rules);
-
+            //dd(json_encode($validator->fails()));
             if($validator->fails()) {
                 return redirect()->back()->withErrors($validator)->withInput();;
             }
@@ -207,26 +257,63 @@ class ContactsController extends Controller
      * @param int $id contact ID
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function updateModal(Request $request, $id)
+    public function updateModalContact(Request $request, $id)
     {
-
+        // $firstName = Input::get('first_name');
+        // $contact_type_id = Input::get('contact_type_id');
+        // return response()->json($request);
+        //cerca Contacts
         if(Module::hasAccess("Contacts", "edit")) {
 
-            $rules = Module::validateRules("Contacts", $request, true);
-            return response()->json(['response' => $rules]);
-            $validator = Validator::make($request->all(), $rules);
+            $contact = Contact::find($id);
+            $fields = ModuleFields::getModuleFields('Contacts');
 
-            if($validator->fails()) {
-                return redirect()->back()->withErrors($validator)->withInput();;
+            foreach ($fields as $field => $value) {
+                $value_get = Input::get($field);
+                if ( $value_get != null ) {
+                    $contact->$field = $value_get;
+                }else{
+                    $contact->$field = "";
+                }
             }
 
-            $insert_id = Module::updateRow("Contacts", $request, $id);
+            $contact->account_id = input::get('accountId');
+            // $field = 'first_name';
+            // $contact->$field = Input::get($field);
+            // $contact->last_name = Input::get('last_name');
+            // $contact->contact_type_id = Input::get('contact_type_id');
+            // $contact->notes = Input::get('notes');
+            // $request = $contact->toArray();
 
-            return redirect()->route(config('laraadmin.adminRoute') . '.contacts.index');
 
+            $rules = Module::validateRules("Contacts", $contact, true);
+
+            $validator = Validator::make($contact->toArray(), $rules);
+
+            if($validator->fails()) {
+                return response()->json(['response' => 'noooo']);
+            }
+
+            $insert_id = Module::updateRow("Contacts", $contact, $id);
+            //add office description
+            if ($contact->title_id > 0) {
+                $title_description = DB::table('titles')->select('description')->where('id', $contact->title_id)->value('description');
+                $contact->title_description = $title_description;
+            }
+
+            if ($contact->office_id > 0) {
+                $office_description = DB::table('offices')->select('description')->where('id', $contact->office_id)->value('description');
+                $contact->office_description = $office_description;
+            }
+
+            if ($contact->contact_type_id > 0) {
+                $contact_type_description = DB::table('contact_types')->select('description')->where('id', $contact->contact_type_id)->value('description');
+                $contact->contact_type_description = $contact_type_description;
+            }
+            return response()->json($contact);
 
         } else {
-            return redirect(config('laraadmin.adminRoute') . "/");
+            return response()->json(['response' => 'non so']);
         }
         // if(Module::hasAccess("Contacts", "edit")) {
         //
@@ -261,6 +348,7 @@ class ContactsController extends Controller
      */
     public function destroy($id)
     {
+        dd($id);
         if(Module::hasAccess("Contacts", "delete")) {
             Contact::find($id)->delete();
 
@@ -268,6 +356,24 @@ class ContactsController extends Controller
             return redirect()->route(config('laraadmin.adminRoute') . '.contacts.index');
         } else {
             return redirect(config('laraadmin.adminRoute') . "/");
+        }
+    }
+
+    /**
+     * Remove the specified contact from storage.
+     *
+     * @param int $id contact ID
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function delete_contact($id)
+    {
+        if(Module::hasAccess("Contacts", "delete")) {
+            $account_id = Input::get('accountId');
+            Contact::find($id)->delete();
+            // Redirecting to index() method
+            return redirect(config('laraadmin.adminRoute') . '/accounts/' . $account_id . "#tab-contacts");
+        } else {
+            return redirect(config('laraadmin.adminRoute') . '/accounts/' . $account_id);
         }
     }
 

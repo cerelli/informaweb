@@ -109,12 +109,9 @@ Route::group(['as' => $as, 'middleware' => ['auth', 'permission:ADMIN_PANEL']], 
     Route::resource(config('laraadmin.adminRoute') . '/contacts', 'LA\ContactsController');
     Route::get(config('laraadmin.adminRoute') . '/contact_dt_ajax', 'LA\ContactsController@dtajax');
     Route::post(config('laraadmin.adminRoute') . '/contact_modal_ajax', 'LA\ContactsController@modalajax');
-	Route::post(config('laraadmin.adminRoute') . '/updateModalContact/{id}', 'LA\ContactsController@updateModal')->name('updateModalContact');
+	Route::post(config('laraadmin.adminRoute') . '/updateModalContact/{id}', 'LA\ContactsController@updateModalContact')->name('updateModalContact');
 	Route::get(config('laraadmin.adminRoute') . '/editModalContact/{id}', 'LA\ContactsController@editModal');
-
-
-
-
+	Route::post(config('laraadmin.adminRoute') . '/delete_contact/{id}', 'LA\ContactsController@delete_contact')->name('delete_contact');
 
     /* ================== ContactDetails ================== */
     Route::resource(config('laraadmin.adminRoute') . '/contact_details', 'LA\Contact_detailsController');

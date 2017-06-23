@@ -141,14 +141,15 @@ $(function () {
 
 	});
 
+
 	$("#menu-nestable .editMenuBtn").on("click", function() {
 		var info = JSON.parse($(this).attr("info"));
 
 		var url = $("#menu-edit-form").attr("action");
 		index = url.lastIndexOf("/");
 		url2 = url.substring(0, index+1)+info.id;
-		// console.log(url2);
-		$("#menu-edit-form").attr("action", url2)
+		console.log(url2);
+		$("#menu-edit-form").attr("action", url2);
 		$("#EditModal input[name=url]").val(info.url);
 		$("#EditModal input[name=name]").val(info.name);
 		$("#EditModal input[name=icon]").val(info.icon);

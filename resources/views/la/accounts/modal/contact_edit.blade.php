@@ -12,12 +12,13 @@
             <div class="modal-body">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" id="contactId" value="">
-                <input type="hidden" id="urlController" value="{{ url(config('laraadmin.adminRoute')) }}"=>
+                <input type="hidden" id="urlController" value="{{ url(config('laraadmin.adminRoute')) }}">
                 {{-- <form id="formDati" class="form-horizontal" role="form"> --}}
                 {{-- {!! Form::open(['action' => ['LA\ContactsController@updateModal',1], 'id' => 'contact-edit-modal-form']) !!} --}}
                 {{-- {!! Form::model($contact, ['method'=>'put', 'url' => config('laraadmin.adminRoute') . '/contacts/'. $contact->id,  'id' => 'contact-update-form']) !!} --}}
                 {{-- {!! Form::model($contact, ['route' => [config('laraadmin.adminRoute') . '.updateModalContact', 1 ], 'method'=>'PUT', 'id' => 'contact-update-form']) !!} --}}
-                {!! form::open(['url' => '#', 'method' => 'post']) !!}
+                {!! Form::open(['action' => ['LA\ContactsController@updateModalContact',1], 'id' => 'contact-edit-modal-form', 'method' => 'POST']) !!}
+                    <input type="hidden" name="accountId" value={{ $account->id }}>
                     <div class="box-body">
                         @php ($fields = array('title_id','contact_type_id','office_id','first_name','last_name','notes'))
                         @la_formMultiple("Contacts", $fields)
@@ -32,19 +33,21 @@
                         @la_input($module, 'account_user')
                         --}}
                     </div>
-                    {!! Form::submit( 'Submit', ['class'=>'btn btn-success']) !!}
+
+                    <button type="button" class="btn btn-default pull-right" style="margin-left: 3px" data-dismiss="modal">{{ __('Close') }}</button>
+                    {!! Form::submit( __('Save'), ['id'=>'submit', 'class'=>'btn btn-success pull-right']) !!}
                 {!! Form::close() !!}
                 {{-- </form> --}}
                 {{-- {!! Form::submit( 'Submit', ['class'=>'btn btn-success', 'id'=>'btn_submit']) !!} --}}
             </div>
-            <div class="modal-footer">
+            {{-- <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('Close') }}</button>
                 <button type="button" class="btn btn-primary save" data-dismiss="modal">
                     <span class='glyphicon glyphicon-check'></span> Save
                 </button>
 
-            </div>
-            // </form>
+            </div> --}}
+            {{-- // </form> --}}
             {{-- {!! Form::close() !!} --}}
         </div>
     </div>

@@ -12,6 +12,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Communication_type;
+use App\Models\Contact_detail_type;
 
 class Contact_detail extends Model
 {
@@ -26,6 +27,10 @@ class Contact_detail extends Model
     protected $guarded = [];
 
     protected $dates = ['deleted_at'];
+
+    public function contact_detail_type(){
+        return $this->belongsTo(Contact_detail_type::class, 'contact_detail_type_id');
+    }
 
     public function communication_type(){
         return $this->belongsTo(Communication_type::class, 'communication_type_id');

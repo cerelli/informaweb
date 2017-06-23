@@ -51,7 +51,8 @@ class iWHelper
                 }
             }
         }
-        $editing .= '<a class="editModalBtn pull-right btn btn-xs btn-warning btn-hidden" info=\'' . json_encode($info) . '\'><i class="fa fa-edit"></i></a>';
+        // $editing .= '<a id="editModalBtn_'.$info->id.'" class="editModalBtn pull-right btn btn-xs btn-warning btn-hidden" info=\'' . json_encode($info) . '\'><i class="fa fa-edit"></i></a>';
+        $editing .= '<a id="editModalBtn_'.$info->id.'" class="editModalBtn pull-right btn btn-xs btn-warning btn-hidden" info=\'' . json_encode($info) . '\'><i class="fa fa-edit"></i></a>';
         return $editing;
         // dd($editing);
         // $editing = \Collective\Html\FormFacade::open(['route' => [config('laraadmin.adminRoute') . '.la_menus.destroy', $menu->id], 'method' => 'delete', 'style' => 'display:inline']);
