@@ -1,7 +1,7 @@
 @extends('la.layouts.app')
 
 @section('htmlheader_title')
-    Account View
+    {{ __('Account View')}}
 @endsection
 
 
@@ -104,11 +104,11 @@
 
     <ul data-toggle="ajax-tab" class="nav nav-tabs profile" role="tablist">
         <li class=""><a href="{{ url(config('laraadmin.adminRoute') . '/accounts') }}" data-toggle="tooltip" data-placement="right" title="Back to Accounts"><i class="fa fa-chevron-left"></i></a></li>
-        <li class="active"><a role="tab" data-toggle="tab" class="active" href="#tab-general-info" data-target="#tab-info"><i class="fa fa-bars"></i> General Info</a></li>
-        <li class=""><a role="tab" data-toggle="tab" href="#tab-contacts" data-target="#tab-contacts"><i class="fa fa-user"></i> contacts</a></li>
-        <li class=""><a role="tab" data-toggle="tab" href="#tab-timeline" data-target="#tab-timeline"><i class="fa fa-clock-o"></i> Timeline</a></li>
+        <li class="active"><a role="tab" data-toggle="tab" class="active" href="#tab-general-info" data-target="#tab-info"><i class="fa fa-bars"></i> {{ __('General Info') }}</a></li>
+        <li class=""><a role="tab" data-toggle="tab" href="#tab-contacts" data-target="#tab-contacts"><i class="fa fa-user"></i>{{ __('Contacts') }}</a></li>
+        <li class=""><a role="tab" data-toggle="tab" href="#tab-timeline" data-target="#tab-timeline"><i class="fa fa-clock-o"></i>{{ __('Timeline') }}</a></li>
         @role(['SUPER_ADMIN','NORMAL_ADMIN'])
-            <li class=""><a role="tab" data-toggle="tab" href="#tab-access_rights" data-target="#tab-access_rights"><i class="fa fa-key"></i> access_rights</a></li>
+            <li class=""><a role="tab" data-toggle="tab" href="#tab-access_rights" data-target="#tab-access_rights"><i class="fa fa-key"></i>{{ __('Access Rights') }}</a></li>
         @endrole
     </ul>
 
@@ -117,7 +117,7 @@
             <div class="tab-content">
                 <div class="panel infolist">
                     <div class="panel-default panel-heading">
-                        <h4>General Info</h4>
+                        <h4>{{ __('General Info') }}</h4>
                     </div>
                     <div class="panel-body">
                         {{-- @la_display($module, 'title_id') --}}
@@ -130,7 +130,7 @@
                         @la_display($module, 'fiscal_code')
                         @la_display($module, 'is_blocked')
                         @la_display($module, 'block_alert_message')
-                    
+
                     </div>
                 </div>
             </div>

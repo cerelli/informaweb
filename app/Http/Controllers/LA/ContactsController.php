@@ -84,30 +84,7 @@ class ContactsController extends Controller
     }
 
 
-    public function delete_contact_old(Request $request, $id)
-    {
-        // $contact = $request->input();
-        // $contact['account_id'] = $id;
-        $request->{'account_id'} = $id;
 
-        if(Module::hasAccess("Contacts", "create")) {
-
-            $rules = Module::validateRules("Contacts", $request);
-
-            $validator = Validator::make($request->all(), $rules);
-
-            if($validator->fails()) {
-                return redirect()->back()->withErrors($validator)->withInput();
-            }
-
-            $insert_id = Module::insert("Contacts", $request);
-
-            return redirect(config('laraadmin.adminRoute') . '/accounts/' . $id . "#tab-contacts");
-
-        } else {
-            return redirect(config('laraadmin.adminRoute') . "/");
-        }
-    }
     /**
      * Store a newly created contact in database.
      *

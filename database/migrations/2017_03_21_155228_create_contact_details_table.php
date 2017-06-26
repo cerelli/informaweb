@@ -20,7 +20,7 @@ class CreateContactDetailsTable extends Migration
      */
     public function up()
     {
-        Module::generate("ContactDetails", 'contact_details', 'contact_id', 'fa-comments-o', [
+        Module::generate("Contact_details", 'contact_details', 'contact_id', 'fa-comments-o', [
             [
                 "colname" => "contact_id",
                 "label" => "contact_id",
@@ -52,7 +52,7 @@ class CreateContactDetailsTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 0,
                 "required" => true,
-                "listing_col" => false,
+                "listing_col" => true,
                 "popup_vals" => "@communication_types",
             ], [
                 "colname" => "value",
@@ -63,15 +63,15 @@ class CreateContactDetailsTable extends Migration
                 "minlength" => 0,
                 "maxlength" => 150,
                 "required" => true,
-                "listing_col" => false
+                "listing_col" => true
             ], [
                 "colname" => "notes",
                 "label" => "notes",
-                "field_type" => "Textarea",
+                "field_type" => "TextField",
                 "unique" => false,
                 "defaultvalue" => "",
                 "minlength" => 0,
-                "maxlength" => 0,
+                "maxlength" => 60,
                 "required" => false,
                 "listing_col" => false
             ]

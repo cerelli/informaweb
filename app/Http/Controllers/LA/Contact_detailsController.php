@@ -20,6 +20,7 @@ use Collective\Html\FormFacade as Form;
 use Dwij\Laraadmin\Models\Module;
 use Dwij\Laraadmin\Models\ModuleFields;
 use Dwij\Laraadmin\Models\ModuleFieldTypes;
+use Illuminate\Support\Facades\Input;
 
 use App\Models\Contact_detail;
 
@@ -54,6 +55,122 @@ class Contact_detailsController extends Controller
     public function create()
     {
         //
+    }
+
+    public function add_contact_detail(Request $request, $id)
+    {
+        // $contact = $request->input();
+        // $contact['account_id'] = $id;
+        if(Module::hasAccess("Contact_details", "create")) {
+
+            $rules = Module::validateRules("Contact_details", $request);
+            $validator = Validator::make($request->all(), $rules);
+
+            if($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
+            $request->{'contact_id'} = input::get('DetailContactId');
+            $insert_id = Module::insert("Contact_details", $request);
+
+            return redirect(config('laraadmin.adminRoute') . '/accounts/' . $id . "#tab-contacts");
+
+        } else {
+
+            return redirect(config('laraadmin.adminRoute') . "/");
+        }
+    }
+
+    /**
+     * Show the form for editing the specified contact.
+     *
+     * @param int $id contact ID
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function editModal($id)
+    {
+        if(Module::hasAccess("Contact_details", "edit")) {
+            $contactDetail = Contact_detail::find($id);
+            if(isset($contactDetail->id)) {
+                $module = Module::get('Contact_details');
+
+                $module->row = $contactDetail;
+
+                return response()->json($contactDetail);
+            } else {
+                return response()->json(['response' => 'error']);
+            }
+        } else {
+            return response()->json(['response' => 'not found']);
+        }
+    }
+
+
+    /**
+     * Update the specified contact in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id contact ID
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function updateModalContactDetail(Request $request, $id)
+    {
+        // $firstName = Input::get('first_name');
+        // $contact_type_id = Input::get('contact_type_id');
+        // return response()->json($request);
+        //cerca Contacts
+        if(Module::hasAccess("Contact_details", "edit")) {
+
+            $contactDetail = Contact_detail::find($id);
+            $contact_id = $contactDetail->contact_id;
+            $fields = ModuleFields::getModuleFields('Contact_details');
+
+            foreach ($fields as $field => $value) {
+                $value_get = Input::get($field);
+                if ( $value_get != null ) {
+                    $contactDetail->$field = $value_get;
+                }else{
+                    $contactDetail->$field = "";
+                }
+            }
+
+            $contactDetail->id = $id;
+            $contactDetail->contact_id = $contact_id;
+            // $field = 'first_name';
+            // $contact->$field = Input::get($field);
+            // $contact->last_name = Input::get('last_name');
+            // $contact->contact_type_id = Input::get('contact_type_id');
+            // $contact->notes = Input::get('notes');
+            // $request = $contact->toArray();
+
+
+            $rules = Module::validateRules("Contact_details", $contactDetail, true);
+
+            $validator = Validator::make($contactDetail->toArray(), $rules);
+
+            if($validator->fails()) {
+                return response()->json(['response' => 'noooo']);
+            }
+
+            $insert_id = Module::updateRow("Contact_details", $contactDetail, $id);
+
+            if ($contactDetail->contact_detail_type_id > 0) {
+                $contact_detail_type = DB::table('contact_detail_types')->select('description','fa_icon')->where('id', $contactDetail->contact_detail_type_id)->first();
+
+                $contactDetail->contact_detail_type_description = $contact_detail_type->description;
+                $contactDetail->contact_detail_type_fa_icon = $contact_detail_type->fa_icon;
+            }
+
+            if ($contactDetail->communication_type_id > 0) {
+                $communication_type = DB::table('communication_types')->select('description','fa_icon')->where('id', $contactDetail->communication_type_id)->first();
+
+                $contactDetail->communication_type_description = $communication_type->description;
+                $contactDetail->communication_type_fa_icon = $communication_type->fa_icon;
+            }
+            return response()->json($contactDetail);
+
+        } else {
+            return response()->json(['response' => 'non so']);
+        }
     }
 
     /**
@@ -188,6 +305,24 @@ class Contact_detailsController extends Controller
             return redirect()->route(config('laraadmin.adminRoute') . '.contact_details.index');
         } else {
             return redirect(config('laraadmin.adminRoute') . "/");
+        }
+    }
+
+    /**
+     * Remove the specified contact from storage.
+     *
+     * @param int $id contact ID
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function delete_contact_detail($id)
+    {
+        if(Module::hasAccess("Contact_details", "delete")) {
+            $account_id = Input::get('accountId');
+            Contact_detail::find($id)->delete();
+            // Redirecting to index() method
+            return redirect(config('laraadmin.adminRoute') . '/accounts/' . $account_id . "#tab-contacts");
+        } else {
+            return redirect(config('laraadmin.adminRoute') . '/accounts/' . $account_id);
         }
     }
 
