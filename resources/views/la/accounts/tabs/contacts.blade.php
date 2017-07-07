@@ -17,10 +17,8 @@
                     @foreach ($row as $contact)
                         <div class="col-md-4 col-sm-12"  style = "padding-bottom: 15px; padding-top: 15px;">
                             <div class="panel panel-default" id="contact_panel_{{ $contact->id }}">
-
                                 <div class="panel-heading" >
                                     <div class="col-xs-3 col-sm-6">
-                                        {{-- <h3 class="panel-title" style = "padding-bottom: 3px; padding-top: 3px;" id="contact_panel_title_{{ $contact->id }}" rel="tooltip" title='{{ $contact->notes }}'> --}}
                                         <h3 class="panel-title" style = "padding-bottom: 3px; padding-top: 3px;" id="contact_panel_title_{{ $contact->id }}">
                                             @la_displayField($contact, 'title_id', 'Contacts', 'true')
                                             <br/>
@@ -37,20 +35,13 @@
                                         <div class="dd" id="contact-panel">
                                             <input type="hidden" id="PanelContactId" value={{ $contact->id }}>
                                             {!! Form::open(['action' => ['LA\ContactsController@delete_contact',$contact->id], 'id' => 'contact-delete-modal-form', 'method' => 'POST']) !!}
-                                            {{-- {{ Form::open(['action' => [config('laraadmin.adminRoute') . '.delete_contact', $contact->id], 'method' => 'POST', 'style'=>'display:inline','onsubmit' => 'return confirm("are you sure ?")']) }} --}}
-
                                             <input type="hidden" name="accountId" value={{ $account->id }}>
-
-                                                {{-- <button class="btn btn-xs pull-right btn-danger btn-hidden" type="submit"><i class="fa fa-times"></i></button> --}}
                                                 <button class="btn btn-xs pull-right btn-danger btn-hidden" type="button" data-toggle="modal" data-target="#confirmDelete" data-title='{{ __('Delete Contact') }}' data-message= '{{ __('Are you sure you want to delete this user ?') }}' >
                                                     <i class="glyphicon glyphicon-trash"></i>
                                                 </button>
                                             {{ Form::close() }}
-                                            {{-- <a href="#" class="pull-right btn btn-xs btn-danger btn-hidden" >
-                                                <i class="fa fa-times" aria-hidden="true"></i>
-                                            </a> --}}
                                             @la_access("Contacts", "edit")
-                                                <?php echo iWHelper::print_contact_editor('Contacts', $contact); ?>
+                                                <?php echo iWHelper::print_modal_editor('Contacts', $contact); ?>
                                             @endla_access
                                         </div>
                                     </div>
@@ -58,8 +49,6 @@
                                 <div class="panel-body" id="contact-detail-panel">
                                     <div class="row dats1" style="border-bottom-style: solid; border-color: #ddd; border-width: 1px;">
                                         @la_access("Contact_details", "create")
-                                         {{-- '<a id="editModalBtn_'.$info->id.'" class="editModalBtn pull-right btn btn-xs btn-warning btn-hidden" info=\'' . json_encode($info) . '\'><i class="fa fa-edit"></i></a>';
-                                          --}}
                                             <button class="btn btn-success btn-sm pull-right btn-hidden createContactDetailBtn" style = "margin-right: 3px;" data-toggle="modal" infoDet={{ $contact->id }} data-target="#AddContactDetailModal">{{ __('Add Contact Detail') }}</button>
                                         @endla_access
                                     </div>
@@ -95,7 +84,7 @@
     </div>
 </div>
 
-@include('la.accounts.modal.delete_confirm');
+@include('la.accounts.modal.delete_confirm')
 @include('la.accounts.modal.contact_create')
 @include('la.accounts.modal.contact_edit')
 @include('la.accounts.modal.contact_detail_create')
@@ -110,7 +99,6 @@
     }
     });
     $(document).ready(function(){
-        // $('[rel="tooltip"]').tooltip();
         $("#contact-detail-panel .createContactDetailBtn").on("click", function() {
             var contactId = $(this).attr("infoDet");
             $('#DetailContactId').val(contactId);
@@ -159,23 +147,18 @@
         });
 
         $("#contact-panel .editModalBtn").on("click", function() {
+            console.log('questo');
             var info = JSON.parse($(this).attr("info"));
             var select_fields = ",title_id,contact_type_id,office_id,";
-            // console.log(info);
             var contactId = info.id;
-            // console.log(contactId);
-            // var info = JSON.parse($('#editModalBtn').attr('info'));
-            // console.log(info);
             var url = $("#contact-edit-modal-form").attr("action");
             index = url.lastIndexOf("/");
-            // url2 = url.substring(0, index+1)+info.id;
-
+            console.log(url);
             //*****************
             url2 = $("#urlController").val()+'/editModalContact/'+info.id;
             $("#contact-update-form").attr("action", url2)
             $.ajax({
                 url: $("#urlController").val()+'/editModalContact/'+info.id,
-                // url: url2,
                 method: 'GET',
                 dataType: "json",
                 // data: {
@@ -212,51 +195,6 @@
             // var url = $("#contact-update-form").attr("action");
             // console.log(url);
         });
-
-        // $("#submit").on("click", function(e) {
-        $('#contact-edit-modal-form').on('submit', function(e){
-            e.preventDefault();
-            var contactId = $("#contactId").val();
-            var info = JSON.parse($('#editModalBtn_'+contactId).attr('info'));
-            // console.log(info);
-            var first_name = $("#formDati input[name=first_name]").val();
-            var contact_type_id = $("#formDati input[name=contact_type_id]").val();
-            var newURL = '{!!route(config('laraadmin.adminRoute') . '.updateModalContact',1)!!}';
-
-            index = newURL.lastIndexOf("/");
-            newURL = newURL.substring(0, index+1)+contactId;
-
-            $.ajax({
-                // url: $("#urlController").val()+'/updateModalContact/'+contactId,
-                url: newURL,
-                type: 'POST',
-                // data: {
-                //     'contact_type_id': contact_type_id,
-                //     'first_name': first_name,
-                // },
-                dataType: 'json',
-                data: $("form#contact-edit-modal-form").serialize(),
-                success: function(data){
-                    console.log(data);
-                    // $('#editModalBtn_'+contactId).attr('info',data);
-                    var titolo = data.title_description+'<br/>'+data.first_name+' '+data.last_name+"<br/><span class='label label-primary' style='margin-right: 3px;'>"+data.contact_type_description+ "</span>"+"<span class='label label-primary'>"+data.office_description+ "</span><br/>"+data.notes;
-
-
-                    // $('#contact_panel_'+contactId).load(location.href + ' #contact_panel_'+contactId);
-                    // $('#tab-contacts').load(location.href + ' #tab-contacts');
-                    $('#contact_panel_title_'+contactId+'.panel-title').html(titolo);
-                    $('#EditModal').modal('hide');
-                },
-                error: function(data){
-                    // console.log(data);
-                    // var errors = data.responseJSON;
-                    // console.log(errors);
-                    // Render the errors with js ...
-                }
-            });
-
-        });
-
     });
 
     </script>

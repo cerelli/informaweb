@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\User;
 use App\Models\Title;
 use App\Models\Contact;
+use App\Models\Address;
 use DB;
 use Zizaco\Entrust\EntrustFacade as Entrust;
 
@@ -45,6 +46,9 @@ class Account extends Model
         return $this->hasMany(Contact::class, 'account_id');
     }
 
+    public function addresses(){
+        return $this->hasMany(Address::class, 'account_id');
+    }
 //    public function contact_details(){
 //        return $this->hasManyThrough('App\Models\Contact_detail', 'App\Models\Contact');
 //    }

@@ -29,56 +29,32 @@
 </div>
 @endla_access
 
-
 @push('scripts')
     <script>
-    $.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-    });
     $(document).ready(function(){
-        $('#contact-detail-edit-modal-form').on('submit', function(e){
-            e.preventDefault();
-            var contactId = $("#contactId").val();
-            console.log(contactId);
-            // var info = JSON.parse($('#editModalBtn_'+contactId).attr('info'));
-            // console.log(info);
-            // var first_name = $("#formDati input[name=first_name]").val();
-            // var contact_type_id = $("#formDati input[name=contact_type_id]").val();
-            var newURL = '{!!route(config('laraadmin.adminRoute') . '.updateModalContactDetail',1)!!}';
+        $("#contact-detail-edit-modal-form").validate({
+            submitHandler: function(e) {
+                var contactId = $("#contactId").val();
+                var newURL = '{!!route(config('laraadmin.adminRoute') . '.updateModalContactDetail',1)!!}';
+                index = newURL.lastIndexOf("/");
+                newURL = newURL.substring(0, index+1)+contactId;
 
-            index = newURL.lastIndexOf("/");
-            newURL = newURL.substring(0, index+1)+contactId;
-
-            $.ajax({
-                // url: $("#urlController").val()+'/updateModalContact/'+contactId,
-                url: newURL,
-                type: 'POST',
-                // data: {
-                //     'contact_type_id': contact_type_id,
-                //     'first_name': first_name,
-                // },
-                dataType: 'json',
-                data: $("form#contact-detail-edit-modal-form").serialize(),
-                success: function(data){
-                    var test = $('#contact_detail_panel_'+contactId+'.details').html();
-                    var textModified = '  <i class="fa '+data.contact_detail_type_fa_icon+'" style="margin-right: 3px;"></i><i class="fa '+ data.communication_type_fa_icon+'"  style="margin-right: 3px;"></i>'+data.value+'<br/><span style="font-style: italic;" >'+data.notes+'</span>  ';
-                    console.log(test);
-                    $('#contact_detail_panel_'+contactId+'.details').html(textModified);
-                    $('#EditDetailModal').modal('hide');
-                },
-                error: function(data){
-                    // console.log(data);
-                    // var errors = data.responseJSON;
-                    // console.log(errors);
-                    // Render the errors with js ...
-                }
-            });
-
-        });
-
+                $.ajax({
+                    url: newURL,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: $("form#contact-detail-edit-modal-form").serialize(),
+                    success: function(data){
+                        var test = $('#contact_detail_panel_'+contactId+'.details').html();
+                        var textModified = '  <i class="fa '+data.contact_detail_type_fa_icon+'" style="margin-right: 3px;"></i><i class="fa '+ data.communication_type_fa_icon+'"  style="margin-right: 3px;"></i>'+data.value+'<br/><span style="font-style: italic;" >'+data.notes+'</span>  ';
+                        $('#contact_detail_panel_'+contactId+'.details').html(textModified);
+                        $('#EditDetailModal').modal('hide');
+                    },
+                    error: function(data){
+                    }
+                });
+            }
+          });
     });
-
     </script>
 @endpush

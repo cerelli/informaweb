@@ -106,6 +106,7 @@
         <li class=""><a href="{{ url(config('laraadmin.adminRoute') . '/accounts') }}" data-toggle="tooltip" data-placement="right" title="Back to Accounts"><i class="fa fa-chevron-left"></i></a></li>
         <li class="active"><a role="tab" data-toggle="tab" class="active" href="#tab-general-info" data-target="#tab-info"><i class="fa fa-bars"></i> {{ __('General Info') }}</a></li>
         <li class=""><a role="tab" data-toggle="tab" href="#tab-contacts" data-target="#tab-contacts"><i class="fa fa-user"></i>{{ __('Contacts') }}</a></li>
+        <li class=""><a role="tab" data-toggle="tab" href="#tab-addresses" data-target="#tab-addresses"><i class="fa fa-home"></i>{{ __('Addresses') }}</a></li>
         <li class=""><a role="tab" data-toggle="tab" href="#tab-timeline" data-target="#tab-timeline"><i class="fa fa-clock-o"></i>{{ __('Timeline') }}</a></li>
         @role(['SUPER_ADMIN','NORMAL_ADMIN'])
             <li class=""><a role="tab" data-toggle="tab" href="#tab-access_rights" data-target="#tab-access_rights"><i class="fa fa-key"></i>{{ __('Access Rights') }}</a></li>
@@ -136,6 +137,7 @@
             </div>
         </div>
         @include('la.accounts.tabs.contacts')
+        @include('la.accounts.tabs.addresses')
         @include('la.accounts.tabs.timeline')
         @include('la.accounts.tabs.access_rights')
     </div>

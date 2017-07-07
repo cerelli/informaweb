@@ -5,7 +5,7 @@
             <div class="modal-header">
                 <h4 class="modal-title" id="myModalLabel">{{ __('Add Contact Detail') }}</h4>
             </div>
-            <form action="{{ url(config('laraadmin.adminRoute') . '/add_contact_detail/'.$account->id) }}" method="post">
+            <form action="{{ url(config('laraadmin.adminRoute') . '/add_contact_detail/'.$account->id) }}" method="post" id="create-contact-detail-modal">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="DetailContactId" id="DetailContactId" value="">
 
@@ -24,3 +24,12 @@
     </div>
 </div>
 @endla_access
+
+@push('scripts')
+    <script>
+    $(document).ready(function(){
+        $("#create-contact-detail-modal").validate({
+        });
+    });
+    </script>
+@endpush

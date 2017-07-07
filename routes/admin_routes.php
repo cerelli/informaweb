@@ -85,14 +85,13 @@ Route::group(['as' => $as, 'middleware' => ['auth', 'permission:ADMIN_PANEL']], 
     Route::get(config('laraadmin.adminRoute') . '/account_dt_ajax', 'LA\AccountsController@dtajax');
 	Route::get(config('laraadmin.adminRoute') . '/account_access_right', 'LA\AccountsController@usersAccessRights');
 	Route::post(config('laraadmin.adminRoute') . '/save_account_access_rights/{id}', 'LA\AccountsController@saveAccountAccessRights');
-	Route::post(config('laraadmin.adminRoute') . '/add_contact/{id}', 'LA\ContactsController@add_contact');
-	Route::post(config('laraadmin.adminRoute') . '/add_contact_detail/{id}', 'LA\Contact_detailsController@add_contact_detail');
 	Route::post(config('laraadmin.adminRoute') . '/accounts/edit_contact', 'LA\AccountsController@edit_contact');
 	Route::post(config('laraadmin.adminRoute') . '/update_contact', 'LA\AccountsController@update_contact')->name('updateContact');
 
     /* ================== Contact_detail_types ================== */
     Route::resource(config('laraadmin.adminRoute') . '/contact_detail_types', 'LA\Contact_detail_typesController');
     Route::get(config('laraadmin.adminRoute') . '/contact_detail_type_dt_ajax', 'LA\Contact_detail_typesController@dtajax');
+	Route::post(config('laraadmin.adminRoute') . '/add_contact_detail/{id}', 'LA\Contact_detailsController@add_contact_detail');
 
     /* ================== Communication_types ================== */
     Route::resource(config('laraadmin.adminRoute') . '/communication_types', 'LA\Communication_typesController');
@@ -101,6 +100,8 @@ Route::group(['as' => $as, 'middleware' => ['auth', 'permission:ADMIN_PANEL']], 
     /* ================== Contact_types ================== */
     Route::resource(config('laraadmin.adminRoute') . '/contact_types', 'LA\Contact_typesController');
     Route::get(config('laraadmin.adminRoute') . '/contact_type_dt_ajax', 'LA\Contact_typesController@dtajax');
+	Route::post(config('laraadmin.adminRoute') . '/add_contact/{id}', 'LA\ContactsController@add_contact');
+
 
     /* ================== Offices ================== */
     Route::resource(config('laraadmin.adminRoute') . '/offices', 'LA\OfficesController');
@@ -120,4 +121,22 @@ Route::group(['as' => $as, 'middleware' => ['auth', 'permission:ADMIN_PANEL']], 
 	Route::get(config('laraadmin.adminRoute') . '/editModalContactDetail/{id}', 'LA\Contact_detailsController@editModal');
 	Route::post(config('laraadmin.adminRoute') . '/updateModalContactDetail/{id}', 'LA\Contact_detailsController@updateModalContactDetail')->name('updateModalContactDetail');
 	Route::post(config('laraadmin.adminRoute') . '/delete_contact_detail/{id}', 'LA\Contact_detailsController@delete_contact_detail')->name('delete_contact_detail');
+
+    /* ================== Addresses ================== */
+    Route::resource(config('laraadmin.adminRoute') . '/addresses', 'LA\AddressesController');
+    Route::get(config('laraadmin.adminRoute') . '/address_dt_ajax', 'LA\AddressesController@dtajax');
+
+    /* ================== Localities ================== */
+    Route::resource(config('laraadmin.adminRoute') . '/localities', 'LA\LocalitiesController');
+    Route::get(config('laraadmin.adminRoute') . '/locality_dt_ajax', 'LA\LocalitiesController@dtajax');
+    Route::get(config('laraadmin.adminRoute') . '/locality_select_dtajax', 'LA\LocalitiesController@select_dtajax');
+
+
+    /* ================== Address_types ================== */
+    Route::resource(config('laraadmin.adminRoute') . '/address_types', 'LA\Address_typesController');
+    Route::get(config('laraadmin.adminRoute') . '/address_type_dt_ajax', 'LA\Address_typesController@dtajax');
+	Route::post(config('laraadmin.adminRoute') . '/delete_address/{id}', 'LA\AddressesController@delete_address')->name('delete_address');
+	Route::post(config('laraadmin.adminRoute') . '/updateModalAddress/{id}', 'LA\AddressesController@updateModalAddress')->name('updateModalAddress');
+	Route::get(config('laraadmin.adminRoute') . '/editModalAddress/{id}', 'LA\AddressesController@editModal');
+	Route::post(config('laraadmin.adminRoute') . '/add_address/{account_id}', 'LA\AddressesController@add_address');
 });

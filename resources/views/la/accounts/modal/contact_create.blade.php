@@ -7,7 +7,7 @@
                 {{-- <button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#AddModal">{{ __('Add Account') }}</button> --}}
                 <h4 class="modal-title" id="myModalLabel">{{ __('Add Contact') }}</h4>
             </div>
-            <form action="{{ url(config('laraadmin.adminRoute') . '/add_contact/'.$account->id) }}" method="post">
+            <form action="{{ url(config('laraadmin.adminRoute') . '/add_contact/'.$account->id) }}" method="post" id="create-contact-modal">
             {{-- {!! Form::open(['action' => 'LA\AccountsController@add_contact', 'id' => '$account->id']) !!} --}}
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <div class="modal-body">
@@ -37,3 +37,30 @@
     </div>
 </div>
 @endla_access
+
+
+@push('scripts')
+    <script>
+    $.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+    });
+    $(document).ready(function(){
+        $("#create-contact-modal").validate({
+            // rules: {
+            //      // The key name on the left side is the name attribute
+            //      // of an input field. Validation rules are defined
+            //      // on the right side
+            //      notes: "required",
+            //    },
+            //    // Specify validation error messages
+            //    messages: {
+            //      notes: "Please enter your firstname",
+            //      first_name: "Pipppppo",
+            //    },
+        });
+    });
+
+    </script>
+@endpush

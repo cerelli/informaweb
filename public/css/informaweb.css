@@ -36,3 +36,10 @@ div:after {
   display: block;
   clear: both;
 }
+
+.modal.modal-wide .modal-dialog {
+  width: 70%;
+}
+.modal-wide .modal-body {
+  overflow-y: auto;
+}

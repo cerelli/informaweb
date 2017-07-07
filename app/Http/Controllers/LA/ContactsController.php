@@ -69,7 +69,7 @@ class ContactsController extends Controller
             $rules = Module::validateRules("Contacts", $request);
 
             $validator = Validator::make($request->all(), $rules);
-
+// dd($request->all());
             if($validator->fails()) {
                 return redirect()->back()->withErrors($validator)->withInput();
             }
@@ -273,17 +273,21 @@ class ContactsController extends Controller
 
             $insert_id = Module::updateRow("Contacts", $contact, $id);
             //add office description
-            if ($contact->title_id > 0) {
+            // return response()->json($contact->title_id);
+            $contact->title_description = "";
+            if ( !empty($contact->title_id) ) {
                 $title_description = DB::table('titles')->select('description')->where('id', $contact->title_id)->value('description');
                 $contact->title_description = $title_description;
             }
 
-            if ($contact->office_id > 0) {
+            $contact->office_description = "";
+            if ( !empty($contact->office_id) ) {
                 $office_description = DB::table('offices')->select('description')->where('id', $contact->office_id)->value('description');
                 $contact->office_description = $office_description;
             }
 
-            if ($contact->contact_type_id > 0) {
+            $contact->contact_type_description = "";
+            if ( !empty($contact->contact_type_id) ) {
                 $contact_type_description = DB::table('contact_types')->select('description')->where('id', $contact->contact_type_id)->value('description');
                 $contact->contact_type_description = $contact_type_description;
             }

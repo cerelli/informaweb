@@ -27,5 +27,9 @@ class DbServiceProvider extends ServiceProvider
             \App\Repositories\ContactDetails\ContactDetailsInterface::class,
             \App\Repositories\ContactDetails\ContactDetails::class
         );
+        $this->app->bind(
+            \App\Repositories\Localities\LocalitiesInterface::class,
+            \App\Repositories\Localities\Localities::class
+        );
     }
 }
