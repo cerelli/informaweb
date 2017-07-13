@@ -2,7 +2,7 @@
     <div class="guide1">
         <span class="pull-left">Module Access for Users</span>
     </div>
-    <form action="{{ url(config('laraadmin.adminRoute') . '/save-account-access-rights/'.$account->id) }}" method="post">
+    <form action="{{ url(config('laraadmin.adminRoute') . '/save_account_access_rights/'.$account->id) }}" method="post">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <table class="table table-bordered dataTable no-footer table-access_rights" id="tablea-access_rights">
             <thead>

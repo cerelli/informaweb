@@ -76,15 +76,15 @@ Route::group(['as' => $as, 'middleware' => ['auth', 'permission:ADMIN_PANEL']], 
     Route::resource(config('laraadmin.adminRoute') . '/titles', 'LA\TitlesController');
     Route::get(config('laraadmin.adminRoute') . '/title_dt_ajax', 'LA\TitlesController@dtajax');
 
-    /* ================== Account_Types ================== */
-    Route::resource(config('laraadmin.adminRoute') . '/account_types', 'LA\Account_TypesController');
-    Route::get(config('laraadmin.adminRoute') . '/account_type_dt_ajax', 'LA\Account_TypesController@dtajax');
+    /* ================== Account_types ================== */
+    Route::resource(config('laraadmin.adminRoute') . '/account_types', 'LA\Account_typesController');
+    Route::get(config('laraadmin.adminRoute') . '/account_type_dt_ajax', 'LA\Account_typesController@dtajax');
 
     /* ================== Accounts ================== */
     Route::resource(config('laraadmin.adminRoute') . '/accounts', 'LA\AccountsController');
     Route::get(config('laraadmin.adminRoute') . '/account_dt_ajax', 'LA\AccountsController@dtajax');
 	Route::get(config('laraadmin.adminRoute') . '/account_access_right', 'LA\AccountsController@usersAccessRights');
-	Route::post(config('laraadmin.adminRoute') . '/save_account_access_rights/{id}', 'LA\AccountsController@saveAccountAccessRights');
+	Route::post(config('laraadmin.adminRoute') . '/save_account_access_rights/{id}', 'LA\AccountsController@save_account_access_rights');
 	Route::post(config('laraadmin.adminRoute') . '/accounts/edit_contact', 'LA\AccountsController@edit_contact');
 	Route::post(config('laraadmin.adminRoute') . '/update_contact', 'LA\AccountsController@update_contact')->name('updateContact');
 

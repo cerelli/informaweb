@@ -81,11 +81,11 @@
             </div>
         </div>
         <div class="col-md-1 actions">
-            @la_access("Account_Types", "edit")
+            @la_access("Account_types", "edit")
                 <a href="{{ url(config('laraadmin.adminRoute') . '/account_types/'.$account_type->id.'/edit') }}" class="btn btn-xs btn-edit btn-default"><i class="fa fa-pencil"></i></a><br>
             @endla_access
-            
-            @la_access("Account_Types", "delete")
+
+            @la_access("Account_types", "delete")
                 {{ Form::open(['route' => [config('laraadmin.adminRoute') . '.account_types.destroy', $account_type->id], 'method' => 'delete', 'style'=>'display:inline']) }}
                     <button class="btn btn-default btn-delete btn-xs" type="submit"><i class="fa fa-times"></i></button>
                 {{ Form::close() }}
@@ -94,7 +94,7 @@
     </div>
 
     <ul data-toggle="ajax-tab" class="nav nav-tabs profile" role="tablist">
-        <li class=""><a href="{{ url(config('laraadmin.adminRoute') . '/account_types') }}" data-toggle="tooltip" data-placement="right" title="Back to Account_Types"><i class="fa fa-chevron-left"></i></a></li>
+        <li class=""><a href="{{ url(config('laraadmin.adminRoute') . '/account_types') }}" data-toggle="tooltip" data-placement="right" title="Back to Account_types"><i class="fa fa-chevron-left"></i></a></li>
         <li class="active"><a role="tab" data-toggle="tab" class="active" href="#tab-general-info" data-target="#tab-info"><i class="fa fa-bars"></i> General Info</a></li>
         <li class=""><a role="tab" data-toggle="tab" href="#tab-timeline" data-target="#tab-timeline"><i class="fa fa-clock-o"></i> Timeline</a></li>
     </ul>
@@ -210,7 +210,7 @@
             </ul>
             <!--<div class="text-center p30"><i class="fa fa-list-alt" style="font-size: 100px;"></i> <br> No posts to show</div>-->
         </div>
-        
+
     </div>
     </div>
     </div>

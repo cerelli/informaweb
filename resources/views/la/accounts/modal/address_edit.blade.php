@@ -16,14 +16,15 @@
                     <div class="box-body">
                         @php ($fields = array('address_type_id','street'))
                         @la_formMultiple("Addresses", $fields)
-                        @if ( is_null($address->locality) )
+                        {{-- @if ( !$address->locality )
                             @php ($valueLocality = "")
                         @else
                             @php ($valueLocality = $address->locality->getLocalityString())
-                        @endif
+                        @endif --}}
                         <input type="text" style="width: 100%;" id="localityString" name="localityString" value="" readonly placeholder="{{ __("Select locality below") }}" class="form-control">
 
-                        <input type="hidden" name="inputLocalityString" value="{{ $valueLocality }}">
+                        {{-- <input type="hidden" name="inputLocalityString" value="{{ $valueLocality }}"> --}}
+                        <input type="hidden" name="inputLocalityString" value="">
                         @php ($fields = array('note'))
                         <br/>
                         @la_formMultiple("Addresses", $fields)
@@ -144,44 +145,7 @@
                 table.row('.selected').remove().draw( false );
             } );
 
-            // $('#submit').on( 'click', function (e) {
-            // $('#address-edit-modal-form').on('submit', function(e){
-            //     console.log('prova');
-            //     e.preventDefault();
-            //     var addressId = $("#addressId").val();
-            //     var info = JSON.parse($('#editModalBtn_'+addressId).attr('info'));
-            //     var newURL = '{!!route(config('laraadmin.adminRoute') . '.updateModalAddress',1)!!}';
-            //     index = newURL.lastIndexOf("/");
-            //     newURL = newURL.substring(0, index+1)+addressId;console.log(newURL);
-            //     $.ajax({
-            //         url: newURL,
-            //         type: 'POST',
-            //         dataType: 'json',
-            //         data: $("form#address-edit-modal-form").serialize(),
-            //         success: function(data){
-            //             console.log(data);
-            //             var titolo = data.street+'<br/>'+data.localityString+'<br/>'+data.note;
-            //             $('#address_panel_descr_'+addressId+'.panel-title').html(titolo);
-            //             titolo = data.address_type_description;
-            //             $('#address_panel_title_'+addressId).html(titolo);
-            //             $('#EditModalAddress').modal('hide');
-            //         },
-            //         error: function(data){
-            //         }
-            //     });
-            // });
-
     });
-
-    // var form = $("#address-edit-modal-form");
-    // form.validate({
-    //     errorPlacement: function errorPlacement(error, element) { element.before(error); },
-    //     rules: {
-    //         confirm: {
-    //             equalTo: "#password"
-    //         }
-    //     }
-    // });
 
     $("#address-edit-modal-form").validate({
         lang: 'it',
@@ -200,7 +164,7 @@
         // Make sure the form is submitted to the destination defined
         // in the "action" attribute of the form when valid
         submitHandler: function(e) {
-            console.log('pippo');
+            // console.log('pippo');
             // $('#submitAddr').on( 'click', function (e) {
             // $('#address-edit-modal-form').on('submit', function(e){
                 console.log('prova');

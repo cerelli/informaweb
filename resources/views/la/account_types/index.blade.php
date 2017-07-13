@@ -1,13 +1,13 @@
 @extends("la.layouts.app")
 
-@section("contentheader_title", "Account_Types")
-@section("contentheader_description", "Account_Types listing")
-@section("section", "Account_Types")
+@section("contentheader_title", "Account_types")
+@section("contentheader_description", "Account_types listing")
+@section("section", "Account_types")
 @section("sub_section", "Listing")
-@section("htmlheader_title", "Account_Types Listing")
+@section("htmlheader_title", "Account_types Listing")
 
 @section("headerElems")
-@la_access("Account_Types", "create")
+@la_access("Account_types", "create")
     <button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#AddModal">Add Account Type</button>
 @endla_access
 @endsection
@@ -45,7 +45,7 @@
     </div>
 </div>
 
-@la_access("Account_Types", "create")
+@la_access("Account_types", "create")
 <div class="modal fade" id="AddModal" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -53,7 +53,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">Add Account Type</h4>
             </div>
-            {!! Form::open(['action' => 'LA\Account_TypesController@store', 'id' => 'account_type-add-form']) !!}
+            {!! Form::open(['action' => 'LA\Account_typesController@store', 'id' => 'account_type-add-form']) !!}
             <div class="modal-body">
                 <div class="box-body">
                     @la_form($module)

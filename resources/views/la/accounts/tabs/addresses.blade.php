@@ -98,8 +98,9 @@
                             $("#address-edit-modal-form select[name="+index+"]").val(value).change();
                         }
                     });
+                    $("#address-edit-modal-form input[name=localityString]").val(data.locality);
+                    $("#address-edit-modal-form input[name=inputLocalityString]").val(data.locality);
                     $("#address-edit-modal-form").attr("action", url2)
-                    console.log(data);
                     $("#EditModalAddress").modal("show");
                 },
                 error: function(data){

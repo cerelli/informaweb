@@ -39,7 +39,7 @@ class Account extends Model
     }
 
     public function title(){
-        return $this->belongsTo(Title::class, 'title_id');
+        return $this->hasOne(Title::class, 'id', 'title_id');
     }
 
     public function contacts(){
@@ -49,6 +49,8 @@ class Account extends Model
     public function addresses(){
         return $this->hasMany(Address::class, 'account_id');
     }
+
+    
 //    public function contact_details(){
 //        return $this->hasManyThrough('App\Models\Contact_detail', 'App\Models\Contact');
 //    }
@@ -65,7 +67,6 @@ class Account extends Model
      */
     public static function hasAccess($account_id, $access_type = "view", $user_id = 0)
     {
-
         if (Entrust::hasRole('SUPER_ADMIN')) {
             return true;
         } else {

@@ -30,10 +30,10 @@ class Address extends Model
     protected $dates = ['deleted_at'];
 
     public function address_type(){
-        return $this->belongsTo(Address_type::class, 'address_type_id');
+        return $this->hasOne(Address_type::class, 'address_type_id');
     }
 
     public function locality(){
-        return $this->belongsTo(Locality::class, 'locality_id', 'id');
+        return $this->hasOne(Locality::class, 'id', 'locality_id');
     }
 }
