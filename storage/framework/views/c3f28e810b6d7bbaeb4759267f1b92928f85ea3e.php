@@ -30,7 +30,6 @@
                 <?php echo Form::model($account, ['route' => [config('laraadmin.adminRoute') . '.accounts.update', $account->id ], 'method'=>'PUT', 'id' => 'account-edit-form']); ?>
 
                     <?php echo LAFormMaker::form($module); ?>
-
                     
                     <br>
                     <div class="form-group">

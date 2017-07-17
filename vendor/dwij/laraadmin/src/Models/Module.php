@@ -1123,7 +1123,6 @@ class Module extends Model
     public static function processDBRow($module, $request, $row)
     {
         $ftypes = ModuleFieldTypes::getFTypes2();
-
         foreach($module->fields as $field) {
             if(isset($request->{$field['colname']}) || isset($request->{$field['colname'] . "_hidden"})) {
 
@@ -1173,14 +1172,15 @@ class Module extends Model
                         break;
                     case 'Multiselect':
                         // TODO: Bug fix
-                        $row->{$field['colname']} = json_encode($request->{$field['colname']});
+                        $row->{$field['colname']} = json_encode($request->{$field['colname']}, JSON_NUMERIC_CHECK);
+                        // dd($row->{$field['colname']});
                         break;
                     case 'Password':
                         $row->{$field['colname']} = bcrypt($request->{$field['colname']});
                         break;
                     case 'Taginput':
                         // TODO: Bug fix
-                        $row->{$field['colname']} = json_encode($request->{$field['colname']});
+                        $row->{$field['colname']} = json_encode($request->{$field['colname']}, JSON_NUMERIC_CHECK);
                         break;
                     case 'Files':
                         $files = json_decode($request->{$field['colname']});

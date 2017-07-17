@@ -34,6 +34,7 @@
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
             <li class="header">MODULES</li>
+
             <!-- Optionally, you can add icons to the links -->
             <li><a href="{{ url(config('laraadmin.adminRoute')) }}"><i class='fa fa-home'></i> <span>@lang('validation.dashboard')</span></a></li>
             <?php

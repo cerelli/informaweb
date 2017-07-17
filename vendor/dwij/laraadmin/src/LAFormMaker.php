@@ -39,7 +39,7 @@ class LAFormMaker
      */
     public static function input($module, $field_name, $default_val = null, $required2 = null, $class = 'form-control', $params = [])
     {
-        // Check Field Write Aceess
+        // Check Field Write Access
         if(Module::hasFieldAccess($module->id, $module->fields[$field_name]['id'], $access_type = "write")) {
 
             $row = null;
@@ -469,6 +469,7 @@ class LAFormMaker
                     unset($params['placeholder']);
                     $params['multiple'] = "true";
                     $params['rel'] = "select2";
+
                     if($default_val == null) {
                         if($defaultvalue != "") {
                             $default_val = json_decode($defaultvalue);
@@ -477,6 +478,7 @@ class LAFormMaker
                         }
                     }
                     // Override the edit value
+
                     if(isset($row) && isset($row->$field_name)) {
                         $default_val = json_decode($row->$field_name);
                     }
@@ -486,7 +488,9 @@ class LAFormMaker
                     } else {
                         $popup_vals = array();
                     }
+                    // $default_val = [1,2];
                     $out .= Form::select($field_name . "[]", $popup_vals, $default_val, $params);
+                    // dd($popup_vals);
                     break;
                 case 'Name':
                     $out .= '<label for="' . $field_name . '">' . $label . $required_ast . ' :</label>';
@@ -642,6 +646,7 @@ class LAFormMaker
                     break;
             }
             $out .= '</div>';
+
             return $out;
         } else {
             return "";
